@@ -1,4 +1,5 @@
 import sys
+from board import *
 from game import *
 
 
@@ -21,8 +22,9 @@ from game import *
 
 ###### initialize board
 
-board = Board()
-game = 
+board = board()
+game(board[0], board[1])
+
 
 
 # board = [[] for i in range(boardSize)]
