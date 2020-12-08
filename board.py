@@ -20,14 +20,19 @@ class Player:
         maxValue = max(self.pawns.values())
         furthestPawn = list(self.pawns.keys())[list(self.pawns.values()).index(maxValue)]
         
+        oldPos = self.pawns[furthestPawn]
         
         if self.pawns[furthestPawn] != -1:
-            self.pawns[furthestPawn] += diceNumber
+            newPos = self.pawns[furthestPawn] + diceNumber
         elif diceNumber == 5:
-            self.pawns[furthestPawn] = 0
+            newPos = 0
+        else:
+            newPos = oldPos
             
-        if self.pawns[furthestPawn] >= boardSize: # if outside board
-            del self.pawns[furthestPawn]
+        self.pawns[furthestPawn] = newPos
+        
+        if newPos >= boardSize: # if outside board
+                del self.pawns[furthestPawn]
         
         
         #pawnsInBase = [i for i,j in pawns.items() if j == -1]
@@ -35,19 +40,8 @@ class Player:
         # for pawn in pawnsToMove:
         # availableMoves = []
         
-        
-        
-        
-        
-        
-        
-    # def makeMoveOnBoard(self, movedPawn, board): # should be moved to board class
-        # if self.pawns[movedPawn] >= 68
-        # del
-        # posOnBoard = (self.pawns[movedPawn] + self.startingPoint) % 68
-        # board[posOnBoard] = movedPawn
-        
-        # return(board)
+        return(furthestPawn, newPos, oldPos) # aka moved pawn
+    
         
     #def availableMoves(self, diceNumber):
     
@@ -68,6 +62,21 @@ class Board: # now only the small board variant
             self.filledBoard[endPoint] = 'entrance spot' # and safe point
             self.filledBoard[startingPoint] = 'starting point '
             self.filledBoard[i * 17 + 12 - 1] = 'safe spot'
+            
+    def makeMoveOnBoard(self, player, movedPawn, oldPosRel, newPosRel): # doesnt work if the pawn is removed
+        newPos = (newPosRel + player.startingPoint) % self.boardSize
+        oldPos = (oldPosRel + player.startingPoint) % self.boardSize
+        
+        i = self.filledBoard[oldPos].index(movedPawn) # remove index
+        
+        if newPosRel == 0:
+            self.filledBoard[newPos].append(movedPawn) # add
+        elif newPosRel >= 68:
+            self.filledBoard[oldPos][i].remove(movedPawn) # remove
+        else:
+            self.filledBoard[newPos].append(movedPawn) # add
+            self.filledBoard[oldPos][i].remove(movedPawn) # remove
+       
     
     
 
