@@ -22,8 +22,12 @@ from game import *
 
 ###### initialize board
 
-board = board()
-game(board[0], board[1])
+board = Board(68)
+players = list()
+for i in range(4):
+    players.append(Player(i, board.boardSize, 'random'))
+    
+game(board, players)
 
 
 
