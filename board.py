@@ -13,10 +13,10 @@ class Player:
         numberOfPawns = 4
         self.pawns = {}
         for i in range(numberOfPawns):
-            self.pawns['pawn' + str(i)] = -1 # not on the board yet  
+            self.pawns[self.name + 'pawn' + str(i)] = -1 # not on the board yet  
     
-    # should still check if there are pawns left
-    def makeMove(self, diceNumber, boardSize): # not sure if i should add board, keep everything in player, or keep everything in board
+    # assumes that there are pawns left
+    def makeMove(self, diceNumber, boardSize):
         maxValue = max(self.pawns.values())
         furthestPawn = list(self.pawns.keys())[list(self.pawns.values()).index(maxValue)]
         
@@ -32,7 +32,7 @@ class Player:
         self.pawns[furthestPawn] = newPos
         
         if newPos >= boardSize: # if outside board
-                del self.pawns[furthestPawn]
+            del self.pawns[furthestPawn]
         
         
         #pawnsInBase = [i for i,j in pawns.items() if j == -1]
@@ -40,7 +40,7 @@ class Player:
         # for pawn in pawnsToMove:
         # availableMoves = []
         
-        return(furthestPawn, newPos, oldPos) # aka moved pawn
+        return(furthestPawn, oldPos, newPos) # aka moved pawn
     
         
     #def availableMoves(self, diceNumber):
@@ -59,27 +59,23 @@ class Board: # now only the small board variant
         for i in range(4):
             startingPoint = i * 17 + 5 - 1 # -1 to count 0 as a number
             endPoint = (i * 17 - 1) % boardSize 
-            self.filledBoard[endPoint] = 'entrance spot' # and safe point
-            self.filledBoard[startingPoint] = 'starting point '
-            self.filledBoard[i * 17 + 12 - 1] = 'safe spot'
+            self.filledBoard[endPoint].append('entrance spot') # and safe point
+            self.filledBoard[startingPoint].append('starting point')
+            self.filledBoard[i * 17 + 12 - 1].append('safe spot')
             
     def makeMoveOnBoard(self, player, movedPawn, oldPosRel, newPosRel): # doesnt work if the pawn is removed
         newPos = (newPosRel + player.startingPoint) % self.boardSize
         oldPos = (oldPosRel + player.startingPoint) % self.boardSize
         
-        i = self.filledBoard[oldPos].index(movedPawn) # remove index
-        
         if newPosRel == 0:
             self.filledBoard[newPos].append(movedPawn) # add
         elif newPosRel >= 68:
-            self.filledBoard[oldPos][i].remove(movedPawn) # remove
-        else:
+            self.filledBoard[oldPos][self.filledBoard[oldPos].index(movedPawn)].remove(movedPawn) # remove
+        elif (newPosRel != oldPosRel) | (oldPosRel != -1):
             self.filledBoard[newPos].append(movedPawn) # add
-            self.filledBoard[oldPos][i].remove(movedPawn) # remove
+            self.filledBoard[oldPos][self.filledBoard[oldPos].index(movedPawn)].remove(movedPawn) # remove
        
     
-    
-
         
     
 # # a pawn has a position on the board    
