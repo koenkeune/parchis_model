@@ -52,16 +52,16 @@ class Player:
 
 # the board keeps track where all the pawns of each player are + tells the special board positions
 class Board: # now only the small board variant
-
     def __init__(self, boardSize):
         self.boardSize = boardSize
         self.filledBoard = [[] for i in range(boardSize)]
+        self.startingPoint = []
+        self.endPoint = []
+        self.safeSpot = [] 
         for i in range(4):
-            startingPoint = i * 17 + 5 - 1 # -1 to count 0 as a number
-            endPoint = (i * 17 - 1) % boardSize 
-            self.filledBoard[endPoint].append('entrance spot') # and safe point
-            self.filledBoard[startingPoint].append('starting point')
-            self.filledBoard[i * 17 + 12 - 1].append('safe spot')
+            self.startingPoint.append(i * 17 + 5 - 1) # -1 to count 0 as a number
+            self.endPoint.append((i * 17 - 1) % boardSize)
+            self.safeSpot.append(i * 17 + 12 - 1)
             
     def makeMoveOnBoard(self, player, movedPawn, oldPosRel, newPosRel): # doesnt work if the pawn is removed
         newPos = (newPosRel + player.startingPoint) % self.boardSize
@@ -70,10 +70,10 @@ class Board: # now only the small board variant
         if newPosRel == 0:
             self.filledBoard[newPos].append(movedPawn) # add
         elif newPosRel >= 68:
-            self.filledBoard[oldPos][self.filledBoard[oldPos].index(movedPawn)].remove(movedPawn) # remove
-        elif (newPosRel != oldPosRel) | (oldPosRel != -1):
-            self.filledBoard[newPos].append(movedPawn) # add
-            self.filledBoard[oldPos][self.filledBoard[oldPos].index(movedPawn)].remove(movedPawn) # remove
+            self.filledBoard[oldPos].remove(movedPawn) # remove
+        elif (newPosRel != oldPosRel) and (oldPosRel != -1): 
+            self.filledBoard[newPos].append(movedPawn) # add       
+            self.filledBoard[oldPos].remove(movedPawn) # remove
        
     
         
