@@ -21,25 +21,35 @@ class Player:
             del self.pawns[pawn]
     
     # assumes that there are pawns left    
-    def moveFurthestPawn(self, diceNumber):
-        maxValue = max(self.pawns.values())
-        furthestPawn = list(self.pawns.keys())[list(self.pawns.values()).index(maxValue)]
-        oldPos = self.pawns[furthestPawn]
+    def findFurthestPawn(self, pawnsToMove, diceNumber):
+        # should remove self
+        # should check if pawns are available to move
+        # might remove else remove = oldPos
+        # should be able to return nothing if there are no moves to be had
         
-        if self.pawns[furthestPawn] != -1:
-            newPos = self.pawns[furthestPawn] + diceNumber
-        elif diceNumber == 5: # should always put it down if you can
+        pawns = {i:j for i,j in self.pawns.items() if i in pawnsToMove} # get pawns from pawnstomove (probably ugly code)
+        
+        maxValue = max(pawns.values())
+        furthestPawn = list(pawns.keys())[list(pawns.values()).index(maxValue)]
+        oldPos = pawns[furthestPawn]
+        
+        if pawns[furthestPawn] != -1:
+            newPos = pawns[furthestPawn] + diceNumber
+        elif diceNumber == 5: # the if check should be redundant because diceNumber should always be 5 when it comes there
             newPos = 0
-        else:
-            newPos = oldPos
         
         return(furthestPawn, oldPos, newPos)
         
-    #def availableMoves(self, diceNumber):
-        #pawnsInBase = [i for i,j in pawns.items() if j == -1]
+    def findPawnsToMove(self, diceNumber):
+        if diceNumber == 5:
+            pawnsToMove = [i for i,j in self.pawns.items() if j == -1]
+            if not pawnsToMove:
+                pawnsToMove = [i for i,j in self.pawns.items() if j > -1]
+        else:
+            pawnsToMove = [i for i,j in self.pawns.items() if j > -1]
         
-        # for pawn in pawnsToMove:
-        # availableMoves = []
+        return(pawnsToMove)
+        
     
     #def performStrategy(self, strategy):
     
@@ -59,7 +69,7 @@ class Board: # now only the small board variant
             self.endPoint.append((i * 17 - 1) % boardSize)
             self.safeSpot.append(i * 17 + 12 - 1)
             
-    def makeMoveOnBoard(self, player, pawn, oldPosRel, newPosRel): # doesnt work if the pawn is removed
+    def makeMove(self, player, pawn, oldPosRel, newPosRel): # doesnt work if the pawn is removed
         newPos = (newPosRel + player.startingPoint) % self.boardSize
         oldPos = (oldPosRel + player.startingPoint) % self.boardSize
         
