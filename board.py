@@ -15,30 +15,33 @@ class Player:
         for i in range(numberOfPawns):
             self.pawns[self.name + 'pawn' + str(i)] = -1 # not on the board yet  
     
-    def makeMove(self, pawn, pos, boardSize):
-        self.pawns[pawn] = pos
-        if pos >= boardSize: # if outside board
-            del self.pawns[pawn]
+    def makeMove(self, pawn, newPos, boardSize):
+        if self.pawns[pawn] != -1:
+            self.pawns[pawn] = newPos
+            if self.pawns[pawn] >= boardSize: # if outside board
+                del self.pawns[pawn]
+        else:
+            self.pawns[pawn] = 0
+       
+    # def findPawnToMove(self, ):
     
     # assumes that there are pawns left    
-    def findFurthestPawn(self, pawnsToMove, diceNumber):
-        # should remove self
-        # should check if pawns are available to move
-        # might remove else remove = oldPos
-        # should be able to return nothing if there are no moves to be had
-        
+    def findFurthestPawn(self, pawnsToMove):
         pawns = {i:j for i,j in self.pawns.items() if i in pawnsToMove} # get pawns from pawnstomove (probably ugly code)
-        
         maxValue = max(pawns.values())
         furthestPawn = list(pawns.keys())[list(pawns.values()).index(maxValue)]
         oldPos = pawns[furthestPawn]
         
-        if pawns[furthestPawn] != -1:
-            newPos = pawns[furthestPawn] + diceNumber
-        elif diceNumber == 5: # the if check should be redundant because diceNumber should always be 5 when it comes there
-            newPos = 0
+        return(furthestPawn)
         
-        return(furthestPawn, oldPos, newPos)
+    def findNewPos(self, pawn, diceNumber):
+        oldPos = self.pawns[pawn]
+        if oldPos != -1:
+            newPos = oldPos + diceNumber
+        else:
+            newPos = 0
+            
+        return(oldPos, newPos)
         
     def findPawnsToMove(self, diceNumber):
         if diceNumber == 5:
