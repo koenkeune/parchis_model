@@ -16,14 +16,9 @@ class Player:
             self.pawns[self.name + 'pawn' + str(i)] = -1 # not on the board yet  
     
     def makeMove(self, pawn, newPos, boardSize):
-        if self.pawns[pawn] != -1:
-            self.pawns[pawn] = newPos
-            if self.pawns[pawn] >= boardSize: # if outside board
-                del self.pawns[pawn]
-        else:
-            self.pawns[pawn] = 0
-       
-    # def findPawnToMove(self, ):
+        self.pawns[pawn] = newPos
+        if self.pawns[pawn] >= boardSize: # if outside board
+            del self.pawns[pawn]
     
     # assumes that there are pawns left    
     def findFurthestPawn(self, pawnsToMove):
@@ -55,8 +50,6 @@ class Player:
         
     
     #def performStrategy(self, strategy):
-    
-    #def getFurthestPawn():
 
 
 # the board keeps track where all the pawns of each player are + tells the special board positions
@@ -84,6 +77,7 @@ class Board: # now only the small board variant
             self.filledBoard[newPos].append(pawn) # add  
             self.filledBoard[oldPos].remove(pawn) # remove
             
+    #def removeOtherPawn()
     
         
     
