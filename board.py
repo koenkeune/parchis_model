@@ -65,9 +65,11 @@ class Board: # now only the small board variant
             self.endPoint.append((i * 17 - 1) % boardSize)
             self.safeSpot.append(i * 17 + 12 - 1)
             
-    def makeMove(self, player, pawn, oldPosRel, newPosRel): # doesnt work if the pawn is removed
-        newPos = (newPosRel + player.startingPoint) % self.boardSize
-        oldPos = (oldPosRel + player.startingPoint) % self.boardSize
+    def makeMove(self, players, i, pawn, oldPosRel, newPosRel): # doesnt work if the pawn is removed
+        newPos = (newPosRel + players[i].startingPoint) % self.boardSize
+        oldPos = (oldPosRel + players[i].startingPoint) % self.boardSize
+        
+        self.capturePawn(players, i, newPos)
         
         if newPosRel == 0:
             self.filledBoard[newPos].append(pawn) # add
@@ -77,13 +79,17 @@ class Board: # now only the small board variant
             self.filledBoard[newPos].append(pawn) # add  
             self.filledBoard[oldPos].remove(pawn) # remove
             
-    #def removeOtherPawn()
+    def capturePawn(self, players, i, pos):
+        if len(self.filledBoard[pos]) == 1:
+            j = int(self.filledBoard[pos][0][6]) # other player on same pos
+            if i != j:
+                players[j].makeMove(self.filledBoard[pos][0], -1, self.boardSize)
+                self.filledBoard[pos].remove(self.filledBoard[pos][0])
+                
     
-        
+# should add that you get 20 steps for a capture
+# should look into if the if's of makemove should be at a seperate function   
     
-# # a pawn has a position on the board    
-# class Pawn(Player, Board):
-    # def __init__(self, name, startingPoint):
-        # self.startingPoint = startingPoint
-        # self.name = name
-        
+    
+    
+    

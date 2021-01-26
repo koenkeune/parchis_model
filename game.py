@@ -26,14 +26,14 @@ def game(board, players):
                     pawn = players[i].findFurthestPawn(pawnsToMove)
                     positions = players[i].findNewPos(pawn, diceNumber)
                     players[i].makeMove(pawn, positions[1], board.boardSize)
-                    board.makeMove(players[i], pawn, positions[0], positions[1])
+                    board.makeMove(players, i, pawn, positions[0], positions[1])
                     
                 if sixesThrown == 3:
                     diceNumber = 0 # a number to get out of the while loop
                     if pawnsToMove:
                         if positions[1] < board.boardSize: # remove only if it didn't land in the end zone
                             players[i].makeMove(pawn, -1, board.boardSize)
-                            board.makeMove(players[i], pawn, positions[1], -1)
+                            board.makeMove(players, i, pawn, positions[1], -1)
                     
                 someoneWon = (len(players[i].pawns) == 0) # not(self.pawns)
                 
