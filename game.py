@@ -13,18 +13,17 @@ def game(board, players):
         print(board.filledBoard)
         while not(someoneWon) and i < numPlayers:
             sixesThrown = 0
-            diceNumber = 6 # every player start with a 'free' turn
+            diceNumber = 6 # to get in the while
             while diceNumber == 6 and not(someoneWon):
                 diceNumber = randrange(1,7)
                 print(diceNumber)
                 if diceNumber == 6:
                     sixesThrown += 1
-
                 stepsForward = diceNumber
                 capture = True
                 while capture:
                     capture = False
-                    pawnsToMove = players[i].findPawnsToMove(stepsForward)
+                    pawnsToMove = players[i].findPawnsToMove(board, stepsForward)
 
                     if pawnsToMove:
                         pawn = players[i].findFurthestPawn(pawnsToMove) # move in head
