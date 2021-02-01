@@ -38,6 +38,7 @@ def game(board, players):
                             board.makeMove(players, i, pawn, positions[0], positions[1]) # move in real life
                             if capture:
                                 stepsForward = 20
+                                print('capture')
                         
                 if sixesThrown == 3:
                     diceNumber = 0 # a number to get out of the while loop

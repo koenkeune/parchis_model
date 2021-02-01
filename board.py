@@ -4,6 +4,7 @@ from random import randrange
 # each player plays according to a certain strategy
 # each player has 4 pawns of which each have a spot
 # the pawns have a relative position from the player pov
+# finds which pawns a player can use and moves them from player pov
 class Player:
     def __init__(self, number, boardSize, strategy):
         self.name = 'player' + str(number)
@@ -74,6 +75,7 @@ class Player:
 
 
 # the board keeps track where all the pawns of each player are + tells the special board positions
+# executes moves on board
 class Board: # now only the small board variant
     def __init__(self, boardSize):
         self.boardSize = boardSize
@@ -82,8 +84,8 @@ class Board: # now only the small board variant
         self.endPoints = []
         self.safeSpots = [] 
         for i in range(4):
-            self.safeSpots.append(i * 17 + 5 - 1) # startingPoint, -1 to count 0 as a number
-            self.safeSpots.append((i * 17 - 1) % boardSize) # endPoint
+            self.startingPoints.append(i * 17 + 5 - 1) # startingPoints, -1 to count 0 as a number
+            self.safeSpots.append((i * 17 - 1) % boardSize) # endPoints
             self.safeSpots.append(i * 17 + 12 - 1)
             
     def makeMove(self, players, i, pawn, oldPosRel, newPosRel):
@@ -101,14 +103,24 @@ class Board: # now only the small board variant
     def capturePawn(self, players, i, posRel): # capture when there is another player at the same position
         pos = (posRel + players[i].startingPoint) % self.boardSize
         capture = False
-        if pos not in self.safeSpots and len(self.filledBoard[pos]) == 1: # should add another case when it is the startingPoint
+        if pos not in self.safeSpots and len(self.filledBoard[pos]) == 1:
             j = int(self.filledBoard[pos][0][6]) # other player on same pos
             if i != j:
-                print('capture')
                 capture = True
                 players[j].makeMove(self.filledBoard[pos][0], -1, self.boardSize)
                 self.filledBoard[pos].remove(self.filledBoard[pos][0])
-                
+        elif pos in self.startingPoints and len(self.filledBoard[pos]) == 2:
+            j = int(self.filledBoard[pos][0][6])
+            k = int(self.filledBoard[pos][1][6])
+            if i != k: # capture last pawn first
+                capture = True
+                players[k].makeMove(self.filledBoard[pos][1], -1, self.boardSize)
+                self.filledBoard[pos].remove(self.filledBoard[pos][1])
+            elif i != j:
+                capture = True
+                players[j].makeMove(self.filledBoard[pos][0], -1, self.boardSize)
+                self.filledBoard[pos].remove(self.filledBoard[pos][0])
+            
         return(capture)
                 
     
