@@ -26,7 +26,10 @@ def game(board, players):
                     pawnsToMove = players[i].findPawnsToMove(board, stepsForward)
 
                     if pawnsToMove:
-                        pawn = players[i].findFurthestPawn(pawnsToMove) # move in head
+                        if len(pawnsToMove) == 1: # or at the same pos
+                            pawn = pawnsToMove[0]
+                        else:
+                            pawn = players[i].performStrategy(players, board, pawnsToMove, i, stepsForward) # move in head
                         positions = players[i].findNewPos(pawn, stepsForward) # move in head
                         
                         if sixesThrown == 3 and positions[1] < board.boardSize: # remove only if it didn't land in the end zone
