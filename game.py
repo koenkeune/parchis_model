@@ -24,14 +24,12 @@ def game(board, players):
                 while capture:
                     capture = False
                     pawnsToMove = players[i].findPawnsToMove(board, stepsForward)
-
                     if pawnsToMove:
                         if len(pawnsToMove) == 1: # or at the same pos
                             pawn = pawnsToMove[0]
                         else:
                             pawn = players[i].performStrategy(players, board, pawnsToMove, i, stepsForward) # move in head
                         positions = players[i].findNewPos(pawn, stepsForward) # move in head
-                        
                         if sixesThrown == 3 and positions[1] < board.boardSize: # remove only if it didn't land in the end zone
                             players[i].makeMove(pawn, -1, board.boardSize)
                             board.makeMove(players, i, pawn, positions[0], -1) # can only remove if it is on the board
@@ -41,13 +39,10 @@ def game(board, players):
                             board.makeMove(players, i, pawn, positions[0], positions[1]) # move in real life
                             if capture:
                                 stepsForward = 20
-                                print('capture')
-                        
+                                print('capture') 
                 if sixesThrown == 3:
-                    diceNumber = 0 # a number to get out of the while loop
-                        
+                    diceNumber = 0 # a number to get out of the while loop 
                 someoneWon = (len(players[i].pawns) == 0) # not(self.pawns)
-                
             if someoneWon:
                 print(players[i].name, ' WON!')
                 print('in ', j, ' steps')

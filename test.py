@@ -24,7 +24,7 @@ from game import *
 
 board = Board(68)
 players = list()
-players.append(Player(0, board.boardSize, 'furthest'))
+players.append(Player(0, board.boardSize, 'safest'))
 for i in range(1,4):
     players.append(Player(i, board.boardSize, 'furthest'))
 

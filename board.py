@@ -1,4 +1,3 @@
-from random import randrange
 # set up the game (based on the initial parameters)
 
 # each player plays according to a certain strategy
@@ -10,10 +9,9 @@ class Player:
         self.name = 'player' + str(number)
         self.strategy = strategy
         self.startingPoint = number * 17 + 5 - 1
-        self.endPoint = (number * 17 - 1) % boardSize 
-        numberOfPawns = 4
+        self.endPoint = (number * 17 - 1) % boardSize
         self.pawns = {}
-        for i in range(numberOfPawns):
+        for i in range(4): # 4 pawns
             self.pawns[self.name + 'pawn' + str(i)] = -1 # not on the board yet  
     
     def makeMove(self, pawn, newPos, boardSize):
@@ -97,46 +95,57 @@ class Player:
         for otherPlNum in otherPlNums:
             hasPawnsAtBase[otherPlNum] = bool([i for i,j in self.pawns.items() if j == -1])
             hasBridges[otherPlNum] = bool([i for i,j in enumerate(board.filledBoard) if len(j) == 2])
-                
         safetyScore = {}
         for pawn in pawnsToMove:
-            print(pawn)
             relPos = self.pawns[pawn]
             pos = (relPos + self.startingPoint) % board.boardSize
             posNew = (pos + stepsForward) % board.boardSize
-            
-            safetyRank = calcSafetyRank(players, board, plNum, stepsForward, pos, hasPawnsAtBase, hasBridges)
-            safetyRankNew = calcSafetyRank(players, board, plNum, stepsForward, posNew, hasPawnsAtBase, hasBridges)
+            safetyRank = calcSafetyRank(players, board, plNum, stepsForward, pos, hasPawnsAtBase, hasBridges, False)
+            safetyRankNew = calcSafetyRank(players, board, plNum, stepsForward, posNew, hasPawnsAtBase, hasBridges, True)
             safetyScore[pawn] = safetyRankNew - safetyRank
             
         return(safetyScore)
 
 # should reorganize  
-def calcSafetyRank(players, board, plNum, stepsForward, pos, hasPawnsAtBase, hasBridges):
-    if pos in board.safeSpots:
+def calcSafetyRank(players, board, plNum, stepsForward, pos, hasPawnsAtBase, hasBridges, futureMove):
+    safetyRank = 0
+    if pos in board.safeSpots or pos == players[plNum].startingPoint:
         safetyRank = 1
+    elif len(board.filledBoard[pos]) == 2 and pos not in board.startingPoints:
+        safetyRank = 1
+    elif futureMove and len(board.filledBoard[pos]) == 1 and pos not in board.startingPoints:
+        if plNum == int(board.filledBoard[pos][0][6]): # future bridge, maybe it can be added with the if
+            safetyRank = 1
     else:
         pawnsPerPlayerBehind = countPawnsBehind(players, board, plNum, stepsForward, pos, hasPawnsAtBase, hasBridges)
-        safetyRank = 0
         for value in pawnsPerPlayerBehind.values():
-            safetyRank = safetyRank + (1 - safetyRank) * value
-            
+            safetyRank = value / 6 + (1 - value / 6) * safetyRank
+        safetyRank = 1 - safetyRank
+    
     return(safetyRank)
 
 # should reorganize
 def countPawnsBehind(players, board, plNum, stepsForward, pos, hasPawnsAtBase, hasBridges):
+    bridgeAtPos = False
     pawnsPerPlayerBehind = {}
-    
-    for i in range(6): # should be 7 in the case when all pawns of another player are on board
+    otherPlNums = set(range(4)) - {plNum}
+    for otherPlNum in otherPlNums:
+        pawnsPerPlayerBehind[otherPlNum] = 0
+    for i in range(1,7): # should be 7 back in the case when all pawns of another player are on board
         comPos = (pos - i) % board.boardSize
         pawnsBehind = board.filledBoard[comPos]
         if pawnsBehind:
             plNum2Prev = -1 # initialize
             for pawnBehind in pawnsBehind:
-                print('pawnBehind:', pawnBehind)
                 plNum2 = int(pawnBehind[6])  
-                if plNum != plNum2:
-                    if (i == 5 and not hasPawnsAtBase[plNum2]) or (i == 6 and not hasBridges[plNum2]) or i < 5: # should prob be rewritten, the 6 case should not be a bridge
+                if plNum != plNum2: # has to be other player
+                    tryToCount = False
+                    if (i == 5 and not hasPawnsAtBase[plNum2]) or (i == 6 and not hasBridges[plNum2]) or i < 5:
+                        tryToCount = True
+                    elif i == 6 and len(board.filledBoard[comPos]) == 2:
+                        if plNum2 == int(board.filledBoard[comPos][1][6]):
+                            tryToCount = True
+                    if tryToCount:
                         relPos2 = players[plNum2].pawns[pawnBehind]
                         relPosNew2 = relPos2 + i + stepsForward
                         if relPosNew2 < board.boardSize and plNum2 != plNum2Prev:
@@ -145,7 +154,7 @@ def countPawnsBehind(players, board, plNum, stepsForward, pos, hasPawnsAtBase, h
     
     return(pawnsPerPlayerBehind)
         
-                 
+           
     #def findCaptureMoves()
     
 
