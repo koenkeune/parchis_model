@@ -1,22 +1,19 @@
 from random import randrange
-
-# updating part 
     
+# runs one game according to the rules    
 def game(board, players):
-    print(board.filledBoard)
+    winner = 'no one'
     someoneWon = False
     numPlayers = len(players)
     j = 0
     while not(someoneWon):
         i = 0
         j += 1
-        print(board.filledBoard)
         while not(someoneWon) and i < numPlayers:
             sixesThrown = 0
             diceNumber = 6 # to get in the while
             while diceNumber == 6 and not(someoneWon):
                 diceNumber = randrange(1,7)
-                print(diceNumber)
                 if diceNumber == 6:
                     sixesThrown += 1
                 stepsForward = diceNumber
@@ -39,16 +36,14 @@ def game(board, players):
                             board.makeMove(players, i, pawn, positions[0], positions[1]) # move in real life
                             if capture:
                                 stepsForward = 20
-                                print('capture') 
                 if sixesThrown == 3:
                     diceNumber = 0 # a number to get out of the while loop 
                 someoneWon = (len(players[i].pawns) == 0) # not(self.pawns)
             if someoneWon:
-                print(players[i].name, ' WON!')
-                print('in ', j, ' steps')
+                winner = players[i].name
             i += 1
-            
-    print(board.filledBoard)
+    
+    return(board.filledBoard, winner, j)
     
  
     

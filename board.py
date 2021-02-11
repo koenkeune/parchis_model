@@ -1,5 +1,3 @@
-# set up the game (based on the initial parameters)
-
 # each player plays according to a certain strategy
 # each player has 4 pawns of which each have a spot
 # the pawns have a relative position from the player pov
@@ -17,7 +15,6 @@ class Player:
     def makeMove(self, pawn, newPos, boardSize):
         self.pawns[pawn] = newPos
         if self.pawns[pawn] >= boardSize: # if outside board
-            print('outside board')
             del self.pawns[pawn]
             
     def performStrategy(self, players, board, pawnsToMove, plNum, stepsForward):
@@ -37,8 +34,15 @@ class Player:
         
     def findSafestMove(self, players, board, pawnsToMove, plNum, stepsForward):
         safeScores = self.calcSafetyScores(players, board, pawnsToMove, plNum, stepsForward) # dont calculate when pawn is not on board 
-        
-        return(max(safeScores, key=safeScores.get))
+        safestMove = max(safeScores, key=safeScores.get)
+        safestMoves = []
+        for safeScore in safeScores:
+            if safeScores[safeScore] == safeScores[safestMove]:
+                safestMoves.append(safeScore)
+        if len(safestMoves) > 1:
+            return(self.findFurthestPawn(safestMoves))
+        else:
+            return(safestMoves[0])
         
     def findNewPos(self, pawn, stepsForward):
         oldPos = self.pawns[pawn]
@@ -89,7 +93,7 @@ class Player:
         return(list(set(pawnsToMove) - set(blockedPawns)))
         
     def calcSafetyScores(self, players, board, pawnsToMove, plNum, stepsForward):
-        otherPlNums = set(range(4)) - {plNum} # all players are 4
+        otherPlNums = set(range(4)) - {plNum} # number of players is 4
         hasPawnsAtBase = {}
         hasBridges = {}
         for otherPlNum in otherPlNums:
@@ -152,11 +156,7 @@ def countPawnsBehind(players, board, plNum, stepsForward, pos, hasPawnsAtBase, h
                             pawnsPerPlayerBehind[plNum2] += 1
                 plNum2Prev = plNum2
     
-    return(pawnsPerPlayerBehind)
-        
-           
-    #def findCaptureMoves()
-    
+    return(pawnsPerPlayerBehind)   
 
 # the board keeps track where all the pawns of each player are + tells the special board positions
 # executes moves on board
@@ -207,10 +207,3 @@ class Board: # now only the small board variant
                     self.filledBoard[pos].remove(self.filledBoard[pos][0])
             
         return(capture)
-                
-    
-# should look into if the if's of makemove should be at a seperate function   
-    
-    
-    
-    

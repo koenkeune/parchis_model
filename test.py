@@ -1,9 +1,6 @@
-import sys
+# import sys
 from board import *
 from game import *
-
-
-#while not finished move
 
 # if len(sys.argv) - 1 != 2:
     # sys.exit("number of arguments should be 2")
@@ -17,44 +14,21 @@ from game import *
     # boardSize = 68
 # else:
     # sys.exit("incorrect boardsize either small or large")
+
+winners = {}
+for i in range(4):
+    winners[i] = 0
     
+runs = 1000
+for i in range(runs):
+    board = Board(68)
+    players = list()
+    players.append(Player(0, board.boardSize, 'safest'))
+    for j in range(1,4):
+        players.append(Player(j, board.boardSize, 'furthest'))
+    result = game(board, players)
+    winners[int(result[1][6])] += 1
     
+for i in range(4):
+    print('player', i, 'won:', (winners[i] / runs) * 100, '% of the games')
 
-###### initialize board
-
-board = Board(68)
-players = list()
-players.append(Player(0, board.boardSize, 'safest'))
-for i in range(1,4):
-    players.append(Player(i, board.boardSize, 'furthest'))
-
-    
-game(board, players)
-
-
-
-# board = [[] for i in range(boardSize)]
-# players = ['P1', 'P2', 'P3', 'P4']
-# pawns = 4
-# player1
-# for i in range(4):
-    # board[i * 17 + 17 - 1] = 'safe spot'
-    # board[i * 17 + 5 - 1] = 'starting point ' + players[i]
-    # board[i * 17 + 12 - 1] = 'safe spot'
-
-    
-    
-# #board[17] = 
-
-
-# ######
-
-
-
-# playing = True
-
-
-
-#   while (playing)
-#    for (player in players)
-        
