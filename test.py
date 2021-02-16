@@ -1,25 +1,18 @@
-# import sys
+import sys
 from board import *
 from game import *
 
-# if len(sys.argv) - 1 != 2:
-    # sys.exit("number of arguments should be 2")
-# else:
-    # numberOfPlayers = sys.argv[1]
-    # boardSize = sys.argv[2]
-
-# if boardSize == "big":
-    # boardSize = 102
-# elif (boardSize == "small"):
-    # boardSize = 68
-# else:
-    # sys.exit("incorrect boardsize either small or large")
+if len(sys.argv) - 1 > 1:
+    sys.exit("first argument is optional and is the number of runs")
+elif len(sys.argv) - 1 == 1:
+    runs = sys.argv[1]
+else:
+    runs = 1
 
 winners = {}
 for i in range(4):
     winners[i] = 0
     
-runs = 1000
 for i in range(runs):
     board = Board(68)
     players = list()
@@ -28,7 +21,11 @@ for i in range(runs):
         players.append(Player(j, board.boardSize, 'furthest'))
     result = game(board, players)
     winners[int(result[1][6])] += 1
-    
-for i in range(4):
-    print('player', i, 'won:', (winners[i] / runs) * 100, '% of the games')
+
+if runs == 1:
+    print(result[0])
+    print(result[1], 'WON! in', result[2], 'steps')
+else:
+    for i in range(4):
+        print('player', i, 'won:', (winners[i] / runs) * 100, '% of the games')
 
