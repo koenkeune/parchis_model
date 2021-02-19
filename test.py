@@ -5,7 +5,7 @@ from game import *
 if len(sys.argv) - 1 > 1:
     sys.exit("first argument is optional and is the number of runs")
 elif len(sys.argv) - 1 == 1:
-    runs = sys.argv[1]
+    runs = int(sys.argv[1])
 else:
     runs = 1
 
