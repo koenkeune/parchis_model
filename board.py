@@ -4,13 +4,14 @@
 # finds which pawns a player can use and moves them from player pov
 class Player:
     def __init__(self, number, boardSize, strategy):
+        self.number = number
         self.name = 'player' + str(number)
         self.strategy = strategy
         self.startingPoint = number * 17 + 5 - 1
         self.endPoint = (number * 17 - 1) % boardSize
         self.pawns = {}
         for i in range(4): # 4 pawns
-            self.pawns[self.name + 'pawn' + str(i)] = -1 # not on the board yet  
+            self.pawns[self.name + 'pawn' + str(i)] = -1 # not on the board yet
     
     def makeMove(self, pawn, newPos, boardSize):
         self.pawns[pawn] = newPos
@@ -170,7 +171,7 @@ class Board: # now only the small board variant
         for i in range(4):
             self.startingPoints.append(i * 17 + 5 - 1) # startingPoints, -1 to count 0 as a number
             self.safeSpots.append((i * 17 - 1) % boardSize) # endPoints
-            self.safeSpots.append(i * 17 + 12 - 1)
+            self.safeSpots.append(i * 17 + 12 - 1)    
             
     def makeMove(self, players, i, pawn, oldPosRel, newPosRel):
         newPos = (newPosRel + players[i].startingPoint) % self.boardSize

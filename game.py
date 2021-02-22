@@ -1,4 +1,7 @@
 from random import randrange
+from visualizer import *
+import pygame, sys
+from pygame.locals import *
     
 # runs one game according to the rules    
 def game(board, players):
@@ -45,6 +48,23 @@ def game(board, players):
     
     return(board.filledBoard, winner, j)
     
- 
+def gameVis(board, players):
+    pygame.init()
+    W = 900
+    H = 900
+    screen = pygame.display.set_mode((W, H))
+    drawBoard(screen, W, H)
     
+    for player in players:
+        i = 0
+        for pawn in player.pawns:
+            drawPawn(player.pawns[pawn], player.number, screen, W, H, i)
+            i += 1
+    
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+        pygame.display.update()
     
