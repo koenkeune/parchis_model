@@ -1,23 +1,4 @@
-import pygame, sys
-from pygame.locals import *
-
-# pygame.init()
-
-# W = 900
-# H = 900
-
-# screen = pygame.display.set_mode((W, H))
-# pygame.display.set_caption('Parchis')
-
-# BLACK = (0, 0, 0)
-# WHITE = (255, 255, 255)
-# RED = (255, 0, 0)
-# GREEN = (0, 255, 0)
-# BLUE = (0,0, 255)
-# YELLOW = (255, 255, 0)
-# GRAY = (192, 192, 192)
-
-# screen.fill(WHITE)
+import pygame
 
 def drawBoard(screen, W, H):
     pygame.display.set_caption('Parchis')
@@ -113,9 +94,9 @@ def drawBoard(screen, W, H):
         screen.blit(myfont.render(str(17+i), 1, BLACK), (((21-i)*H)/21 + 12, (11*H)/27 + 12))
         screen.blit(myfont.render(str(17-i), 1, BLACK), (((21-i)*H)/21 + 12, (5*H)/9 + 5))
     screen.blit(myfont.render(str(34), 1, BLACK), (W/2 - 9, 12))
-    screen.blit(myfont.render(str(68), 1, BLACK), (W/2 - 9, ((20)*H)/21 + 12))
+    screen.blit(myfont.render(str(68), 1, BLACK), (W/2 - 9, (20*H)/21 + 12))
     screen.blit(myfont.render(str(51), 1, BLACK), (12, H/2 - 9))
-    screen.blit(myfont.render(str(17), 1, BLACK), (((20)*W)/21 + 12, H/2 - 9))
+    screen.blit(myfont.render(str(17), 1, BLACK), ((20*W)/21 + 12, H/2 - 9))
 
 def getDrawingPos(posOfPlayer, player, pawnsInBase, W, H):
     if posOfPlayer == -1 and player == 0:
@@ -130,7 +111,31 @@ def getDrawingPos(posOfPlayer, player, pawnsInBase, W, H):
     elif posOfPlayer == -1 and player == 2:
         homePos = [((5*W)/6 + 25, (5*H)/6 + 25), ((5*W)/6 - 25, (5*H)/6 + 25), ((5*W)/6 + 25, (5*H)/6 - 25), ((5*W)/6 - 25, (5*H)/6 - 25)]
         pos = homePos[pawnsInBase - 1]
-        
+    if posOfPlayer in range(8):
+        pos = ((5*W)/9 + W/19 + 4, ((41-(posOfPlayer*2))*H)/42)
+    elif posOfPlayer in range(25,33):
+        pos = ((5*W)/9 + W/19 + 4, ((15-((posOfPlayer-25)*2))*H)/42)
+    elif posOfPlayer in range(59, 67):
+        pos = ((3*W)/9 + W/19 + 4, ((27+((posOfPlayer-59)*2))*H)/42)
+    elif posOfPlayer in range(34, 42):
+        pos = ((3*W)/9 + W/19 + 4, ((1+((posOfPlayer-34)*2))*H)/42)
+    elif posOfPlayer in range(42, 50):
+        pos = (((15-((posOfPlayer-42)*2))*W)/42, (3*H)/9 + H/19 + 4)
+    elif posOfPlayer in range(17, 25):
+        pos = (((41-((posOfPlayer-17)*2))*W)/42, (3*H)/9 + H/19 + 4)
+    elif posOfPlayer in range(8, 16):
+        pos = (((27+((posOfPlayer-8)*2))*W)/42, (5*H)/9 + H/19 + 4)
+    elif posOfPlayer in range(51, 59):
+        pos = (((1+((posOfPlayer-51)*2))*W)/42, (5*H)/9 + H/19 + 4)
+    elif posOfPlayer == 67:
+        pos = (W/2, ((41)*H)/42)
+    elif posOfPlayer == 50:
+        pos = (W/42, H/2)
+    elif posOfPlayer == 33:
+        pos = (W/2, H/42)
+    elif posOfPlayer == 16:
+        pos = ((41*W)/42, H/2)
+    
     return(pos)
         
 def getPlayerColor(player):
@@ -156,8 +161,8 @@ def drawPawn(posOfPlayer, player, screen, W, H, pawnsInBase):
         darkColor = (0, 200, 0)
     posX = pos[0]
     posY = pos[1]
-    pygame.draw.circle(screen, color, pos, H/42, 0)
-    pygame.draw.circle(screen, darkColor, pos, H/42, 4)
+    pygame.draw.circle(screen, color, pos, H/42 - 2, 0)
+    pygame.draw.circle(screen, darkColor, pos, H/42 - 2, 4)
     pygame.draw.line(screen, darkColor, (posX - 8, posY - 8), (posX + 8, posY + 8), 4)
     pygame.draw.line(screen, darkColor, (posX + 8, posY - 8), (posX - 8, posY + 8), 4)
 
