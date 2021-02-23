@@ -58,13 +58,30 @@ def gameVis(board, players):
     for player in players:
         i = 0
         for pawn in player.pawns:
-            drawPawn(player.pawns[pawn], player.number, screen, W, H, i)
+            drawPawn(-1, player.number, screen, W, H, 0, i)
             i += 1
+    
+    # board = [['player0pawn1', 'player0pawn2'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn3', 'player3pawn2'], [], [], [], [], [], [], [], [], [], [], ['player2pawn3'], [], [], [], [], [], [], [], [], [], [], ['player1pawn3'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player1pawn1', 'player1pawn2'], []]
+    
     
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
+        
+        # draw board
+        pawnSpots = [board.filledBoard.index(spot) for spot in board.filledBoard if spot]
+        for pawnSpot in pawnSpots:
+            twoPawns = 0
+            if len(board.filledBoard[pawnSpot]) == 2:
+                twoPawns = 1
+            for pawn in board.filledBoard[pawnSpot]:
+                drawPawn(pawnSpot, int(pawn[6]), screen, W, H, twoPawns, 0)
+                twoPawns += 1
+        
+        # draw pawns at home
+        # draw pawns at finish
+        
         pygame.display.update()
     
