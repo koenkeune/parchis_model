@@ -11,10 +11,10 @@ else:
     play = True
 
 if play:
-    board = Board(68)
     players = list()
-    players.append(Player(0, board.boardSize, 'player'))
-    players.append(Player(1, board.boardSize, 'safest'))
+    board = Board(68)
+    players.append(Player(0, board.boardSize, 'safest'))
+    players.append(Player(1, board.boardSize, 'furthest'))
     for j in range(2,4):
         players.append(Player(j, board.boardSize, 'furthest'))
     result = gameVis(board, players)

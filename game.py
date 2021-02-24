@@ -34,7 +34,7 @@ def game(board, players):
                             players[i].makeMove(pawn, -1, board.boardSize)
                             board.makeMove(players, i, pawn, positions[0], -1) # can only remove if it is on the board
                         else:
-                            players[i].makeMove(pawn, positions[1], board.boardSize) # move in real life
+                            players[i].makeMove(pawn, positions[1], board.boardSize) # move in head
                             capture = board.capturePawn(players, i, positions[1])
                             board.makeMove(players, i, pawn, positions[0], positions[1]) # move in real life
                             if capture:
@@ -46,6 +46,9 @@ def game(board, players):
                 winner = players[i].name
             i += 1
     
+    for player in players:
+        print(player.name, 'has:', player.pawnsHome, 'pawns at home')
+    
     return(board.filledBoard, winner, j)
     
 def gameVis(board, players):
@@ -54,34 +57,111 @@ def gameVis(board, players):
     H = 900
     screen = pygame.display.set_mode((W, H))
     drawBoard(screen, W, H)
-    
+    screen_copy = screen.copy()
+    # draw pawns at home
     for player in players:
-        i = 0
-        for pawn in player.pawns:
+        for i in range(player.pawnsHome):
             drawPawn(-1, player.number, screen, W, H, 0, i)
-            i += 1
     
-    # board = [['player0pawn1', 'player0pawn2'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn3', 'player3pawn2'], [], [], [], [], [], [], [], [], [], [], ['player2pawn3'], [], [], [], [], [], [], [], [], [], [], ['player1pawn3'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player1pawn1', 'player1pawn2'], []]
+    
+    winner = 'no one'
+    someoneWon = False
+    numPlayers = len(players)
+    t = 0 # turn
+    sixesThrown = 0
+    capture = False
+    canThrowAgain = False
     
     
     while True:
+        keyPressed = False
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-        
-        # draw board
-        pawnSpots = [board.filledBoard.index(spot) for spot in board.filledBoard if spot]
-        for pawnSpot in pawnSpots:
-            twoPawns = 0
-            if len(board.filledBoard[pawnSpot]) == 2:
-                twoPawns = 1
-            for pawn in board.filledBoard[pawnSpot]:
-                drawPawn(pawnSpot, int(pawn[6]), screen, W, H, twoPawns, 0)
-                twoPawns += 1
-        
-        # draw pawns at home
-        # draw pawns at finish
+            elif event.type == KEYUP:
+                keyPressed = True
         
         pygame.display.update()
+        
+        if keyPressed:
+            if t >= numPlayers:
+                t = 0
+            if capture:
+                capture = False
+            else:    
+                diceNumber = randrange(1,7)
+                stepsForward = diceNumber
+                if diceNumber == 6: # go again
+                    canThrowAgain = True
+                    sixesThrown += 1
+                    if sixesThrown == 3:
+                        canThrowAgain = False
+                else:
+                    canThrowAgain = False
+            
+            print(board.filledBoard)
+            print(getPlayerColorString(t), 'can move:', stepsForward)
+            
+            # repeat if capture
+            pawnsToMove = players[t].findPawnsToMove(board, stepsForward)
+            print('pawns to move:', pawnsToMove)
+            if pawnsToMove:
+                if len(pawnsToMove) == 1: # or at the same pos
+                    pawn = pawnsToMove[0]
+                else:
+                    pawn = players[t].performStrategy(players, board, pawnsToMove, t, stepsForward) # move in head
+                positions = players[t].findNewPos(pawn, stepsForward) # move in head
+                if sixesThrown == 3 and positions[1] < board.boardSize: # remove only if it didn't land in the end zone
+                    players[t].makeMove(pawn, -1, board.boardSize)
+                    board.makeMove(players, t, pawn, positions[0], -1) # can only remove if it is on the board
+                else:
+                    players[t].makeMove(pawn, positions[1], board.boardSize) # move in head
+                    capture = board.capturePawn(players, t, positions[1])
+                    board.makeMove(players, t, pawn, positions[0], positions[1]) # move in real life
+                    if capture:
+                        stepsForward = 20
+                        
+            # someoneWon = (len(players[t].pawns) == 0) # not(self.pawns)
+            # if someoneWon:
+                # winner = players[t].name
+            
+            print('capture', capture, 'canThrowAgain', canThrowAgain)
+            
+            if not(capture) and not(canThrowAgain):
+                t += 1
+                sixesThrown = 0
+            if canThrowAgain:
+                canThrowAgain = False    
+            
+            ### redraw:
+            screen.fill((255, 255, 255))
+            screen.blit(screen_copy, (0,0))        
+            # draw board
+            pawnSpots = [board.filledBoard.index(spot) for spot in board.filledBoard if spot]
+            for pawnSpot in pawnSpots:
+                twoPawns = 0
+                if len(board.filledBoard[pawnSpot]) == 2:
+                    twoPawns = 1
+                for pawn in board.filledBoard[pawnSpot]:
+                    drawPawn(pawnSpot, int(pawn[6]), screen, W, H, twoPawns, 0)
+                    twoPawns += 1
+            # draw pawns at home
+            for player in players:
+                for i in range(player.pawnsHome):
+                    drawPawn(-1, player.number, screen, W, H, 0, i)
+            # draw pawns at finish
+            
+            
+            ###
+                
+def getPlayerColorString(playerNum):
+    if playerNum == 0:
+        return('yellow')
+    elif playerNum == 1:
+        return('blue')
+    elif playerNum == 2:
+        return('RED')
+    elif playerNum == 3:
+        return('GREEN')
     

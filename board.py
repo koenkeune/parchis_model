@@ -12,10 +12,15 @@ class Player:
         self.pawns = {}
         for i in range(4): # 4 pawns
             self.pawns[self.name + 'pawn' + str(i)] = -1 # not on the board yet
+        self.pawnsHome = 4
     
     def makeMove(self, pawn, newPos, boardSize):
+        if newPos == -1:
+            self.pawnsHome += 1
+        elif newPos == 0:
+            self.pawnsHome -= 1
         self.pawns[pawn] = newPos
-        if self.pawns[pawn] >= boardSize: # if outside board
+        if newPos >= boardSize: # if outside board
             del self.pawns[pawn]
             
     def performStrategy(self, players, board, pawnsToMove, plNum, stepsForward):
@@ -167,11 +172,11 @@ class Board: # now only the small board variant
         self.filledBoard = [[] for i in range(boardSize)]
         self.startingPoints = []
         self.endPoints = []
-        self.safeSpots = [] 
+        self.safeSpots = []
         for i in range(4):
             self.startingPoints.append(i * 17 + 5 - 1) # startingPoints, -1 to count 0 as a number
             self.safeSpots.append((i * 17 - 1) % boardSize) # endPoints
-            self.safeSpots.append(i * 17 + 12 - 1)    
+            self.safeSpots.append(i * 17 + 12 - 1)
             
     def makeMove(self, players, i, pawn, oldPosRel, newPosRel):
         newPos = (newPosRel + players[i].startingPoint) % self.boardSize
