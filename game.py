@@ -61,7 +61,7 @@ def gameVis(board, players):
     # draw pawns at home
     for player in players:
         for i in range(player.pawnsHome):
-            drawPawn(-1, player.number, screen, W, H, 0, i, False)
+            drawPawn(-1, player.number, screen, W, H, 0, i, 0, False)
     
     winner = 'no one'
     someoneWon = False
@@ -141,12 +141,12 @@ def gameVis(board, players):
                 if len(board.filledBoard[pawnSpot]) == 2:
                     twoPawns = 1
                 for pawn in board.filledBoard[pawnSpot]:
-                    drawPawn(pawnSpot, int(pawn[6]), screen, W, H, twoPawns, 0, False)
+                    drawPawn(pawnSpot, int(pawn[6]), screen, W, H, twoPawns, 0, 0, False)
                     twoPawns += 1
             # draw pawns at home
             for player in players:
                 for i in range(player.pawnsHome):
-                    drawPawn(-1, player.number, screen, W, H, 0, i, False)
+                    drawPawn(-1, player.number, screen, W, H, 0, i, 0, False)
             # draw pawns at finish line
             for i in range(4):
                 pawnSpots = [board.filledFinishLine[i].index(spot) for spot in board.filledFinishLine[i] if spot]
@@ -155,10 +155,12 @@ def gameVis(board, players):
                     if len(board.filledFinishLine[i][pawnSpot]) == 2:
                         twoPawns = 1
                     for pawn in board.filledFinishLine[i][pawnSpot]:
-                        drawPawn(pawnSpot, int(pawn[6]), screen, W, H, twoPawns, 0, True)
+                        drawPawn(pawnSpot, int(pawn[6]), screen, W, H, twoPawns, 0, 0, True)
                         twoPawns += 1
             # draw finished pawns
-            
+            for player in players:
+                for i in range(player.pawnsFinished):
+                    drawPawn(0, i, screen, W, H, 0, 0, player.pawnsFinished, False)
             ###
                 
 def getPlayerColorString(playerNum):

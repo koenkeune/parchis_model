@@ -134,36 +134,46 @@ def getDrawingPosFinish(posOfPawn, playerNum, W, H):
     elif playerNum == 2:
         pos = (W/2, ((3+(posOfPawn*2))*H)/42)
     elif playerNum == 1:
-        pos = ((39-(posOfPawn*2)*W)/42, H/2)
+        pos = (((39-(posOfPawn*2))*W)/42, H/2)
         
+    return(pos)
+    
+def getDrawingPosFinished(playerNum, pawnsFinished, W, H):
+    if playerNum == 0:
+        finishPos = [(W/2, H/2 + 36), (W/2, H/2 + 76), (W/2 - 40, H/2 + 76), (W/2 + 40, H/2 + 76)]
+    elif playerNum == 2:
+        finishPos = [(W/2, H/2 - 36), (W/2, H/2 - 76), (W/2 - 40, H/2 - 76), (W/2 + 40, H/2 - 76)]
+    elif playerNum == 1:
+        finishPos = [(W/2 + 36, H/2), (W/2 + 76, H/2), (W/2 + 76, H/2 - 40), (W/2 + 76, H/2 + 40)]
+    elif playerNum == 3:
+        finishPos = [(W/2 - 36, H/2), (W/2 - 76, H/2), (W/2 - 76, H/2 - 40), (W/2 - 76, H/2 + 40)]
+    pos = finishPos[pawnsFinished - 1]
+    
     return(pos)
         
 def getDrawingPosHome(playerNum, pawnsInBase, W, H):
     if playerNum == 2:
         homePos = [(W/6 + 25, H/6 + 25), (W/6 - 25, H/6 + 25), (W/6 + 25, H/6 - 25), (W/6 - 25, H/6 - 25)]
-        pos = homePos[pawnsInBase - 1]
     elif playerNum == 3:
         homePos = [(W/6 + 25, (5*H)/6 + 25), (W/6 - 25, (5*H)/6 + 25), (W/6 + 25, (5*H)/6 - 25), (W/6 - 25, (5*H)/6 - 25)]
-        pos = homePos[pawnsInBase - 1]
     elif playerNum == 1:
         homePos = [((5*W)/6 + 25, H/6 + 25), ((5*W)/6 - 25, H/6 + 25), ((5*W)/6 + 25, H/6 - 25), ((5*W)/6 - 25, H/6 - 25)]
-        pos = homePos[pawnsInBase - 1]
     elif playerNum == 0:
         homePos = [((5*W)/6 + 25, (5*H)/6 + 25), ((5*W)/6 - 25, (5*H)/6 + 25), ((5*W)/6 + 25, (5*H)/6 - 25), ((5*W)/6 - 25, (5*H)/6 - 25)]
-        pos = homePos[pawnsInBase - 1]
+    pos = homePos[pawnsInBase - 1]
         
     return(pos)
     
 def getDrawingPosTwoPawns(posOfPawn, pos, twoPawns, finishLine, playerNum, W, H):
     if ((not(finishLine) and posOfPawn in list(range(8)) + list(range(25,42)) + list(range(59, 67))) or 
-        (finishLine and playerNum in [1,3])):  
+        (finishLine and playerNum in [0,2])):  
         if twoPawns == 1:
             posX = pos[0] - W/42
         elif twoPawns == 2:
             posX = pos[0] + W/42
         pos = (posX, pos[1])
     elif ((not(finishLine) and posOfPawn in list(range(8,25)) + list(range(42,59))) or
-        (finishLine and playerNum in [0,2])):
+        (finishLine and playerNum in [1,3])):
         if twoPawns == 1:
             posY = pos[1] - H/42
         elif twoPawns == 2:
@@ -182,11 +192,13 @@ def getPlayerColor(playerNum):
     elif playerNum == 3:
         return(GREEN)
 
-def drawPawn(posOfPawn, playerNum, screen, W, H, twoPawns, pawnsInBase, finishLine):
+def drawPawn(posOfPawn, playerNum, screen, W, H, twoPawns, pawnsInBase, pawnsFinished, finishLine):
     if posOfPawn == -1:
         pos = getDrawingPosHome(playerNum, pawnsInBase, W, H)
     elif finishLine:
         pos = getDrawingPosFinish(posOfPawn, playerNum, W, H)
+    elif pawnsFinished > 0:
+        pos = getDrawingPosFinished(playerNum, pawnsFinished, W, H)
     else:
         pos = getDrawingPos(posOfPawn, playerNum, W, H)
     if twoPawns > 0:

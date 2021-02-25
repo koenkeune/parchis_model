@@ -13,7 +13,7 @@ class Player:
         for i in range(4): # 4 pawns
             self.pawns[self.name + 'pawn' + str(i)] = -1 # not on the board yet
         self.pawnsHome = 4
-        self.pawnsFinish = 0
+        self.pawnsFinished = 0
     
     def makeMove(self, pawn, newPos, boardSize):
         if newPos == -1:
@@ -23,7 +23,7 @@ class Player:
         self.pawns[pawn] = newPos
         if newPos >= (boardSize + 3): # if outside board, should be equal
             del self.pawns[pawn]
-            self.pawnsFinish += 1
+            self.pawnsFinished += 1
             
     def performStrategy(self, players, board, pawnsToMove, plNum, stepsForward):
         if self.strategy == 'furthest':
