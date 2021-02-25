@@ -13,6 +13,7 @@ class Player:
         for i in range(4): # 4 pawns
             self.pawns[self.name + 'pawn' + str(i)] = -1 # not on the board yet
         self.pawnsHome = 4
+        self.pawnsFinish = 0
     
     def makeMove(self, pawn, newPos, boardSize):
         if newPos == -1:
@@ -20,8 +21,9 @@ class Player:
         elif newPos == 0:
             self.pawnsHome -= 1
         self.pawns[pawn] = newPos
-        if newPos >= boardSize: # if outside board
+        if newPos >= (boardSize + 3): # if outside board, should be equal
             del self.pawns[pawn]
+            self.pawnsFinish += 1
             
     def performStrategy(self, players, board, pawnsToMove, plNum, stepsForward):
         if self.strategy == 'furthest':
@@ -87,14 +89,14 @@ class Player:
         blockedPawns = [] # maybe make already a set from blockedPawns
         for pawn in pawnsToMove:
             bridge = False
-            step = 0
+            step = 1
             while bridge == False and step <= stepsForward:
-                step += 1
                 relPos = self.pawns[pawn] + step
                 pos = (relPos + self.startingPoint) % board.boardSize
                 if len(board.filledBoard[pos]) == 2:
                     bridge = True
                     blockedPawns.append(pawn)
+                step += 1
                     
         return(list(set(pawnsToMove) - set(blockedPawns)))
         
@@ -167,28 +169,41 @@ def countPawnsBehind(players, board, plNum, stepsForward, pos, hasPawnsAtBase, h
 # the board keeps track where all the pawns of each player are + tells the special board positions
 # executes moves on board
 class Board: # now only the small board variant
-    def __init__(self, boardSize):
-        self.boardSize = boardSize
-        self.filledBoard = [[] for i in range(boardSize)]
+    def __init__(self):
+        self.boardSize = 68
+        self.filledBoard = [[] for i in range(self.boardSize)]
+        self.filledFinishLine = [[[] for i in range(7)] for i in range(4)]
         self.startingPoints = []
         self.endPoints = []
         self.safeSpots = []
         for i in range(4):
             self.startingPoints.append(i * 17 + 5 - 1) # startingPoints, -1 to count 0 as a number
-            self.safeSpots.append((i * 17 - 1) % boardSize) # endPoints
+            self.safeSpots.append((i * 17 - 1) % self.boardSize) # endPoints
             self.safeSpots.append(i * 17 + 12 - 1)
             
     def makeMove(self, players, i, pawn, oldPosRel, newPosRel):
         newPos = (newPosRel + players[i].startingPoint) % self.boardSize
         oldPos = (oldPosRel + players[i].startingPoint) % self.boardSize
-        
-        if newPosRel == 0:
-            self.filledBoard[newPos].append(pawn) # add
-        elif newPosRel >= self.boardSize or (newPosRel == -1 and newPosRel != oldPosRel):
-            self.filledBoard[oldPos].remove(pawn) # remove
-        elif newPosRel != oldPosRel and oldPosRel != -1: 
-            self.filledBoard[newPos].append(pawn) # add  
-            self.filledBoard[oldPos].remove(pawn) # remove
+        newPosFin = newPosRel - self.boardSize - 4 # finish line pos
+        if newPosFin < 0:
+            if newPosRel == 0:
+                self.filledBoard[newPos].append(pawn) # add board
+            elif newPosRel == -1 and newPosRel != oldPosRel: # should be at exactly + 3
+                self.filledBoard[oldPos].remove(pawn) # remove board
+            elif newPosRel != oldPosRel and oldPosRel != -1: 
+                self.filledBoard[newPos].append(pawn) # add board
+                self.filledBoard[oldPos].remove(pawn) # remove board
+        else:
+            oldPosFin = oldPosRel - self.boardSize - 4
+            if newPosFin >= 0 and oldPosFin < 0:
+                self.filledFinishLine[i][newPosFin].append(pawn) # add finish
+                self.filledBoard[oldPos].remove(pawn) # remove board
+            elif newPosFin > 6:
+                self.filledFinishLine[i][oldPosFin].remove(pawn) # remove finish
+            elif newPosFin >= 0 and oldPosFin <= 6:
+                self.filledFinishLine[i][newPosFin].append(pawn) # add finish
+                self.filledFinishLine[i][oldPosFin].remove(pawn) # remove finish
+            
             
     def capturePawn(self, players, i, posRel): # capture when there is another player at the same position        
         capture = False

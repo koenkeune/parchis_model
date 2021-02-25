@@ -61,8 +61,7 @@ def gameVis(board, players):
     # draw pawns at home
     for player in players:
         for i in range(player.pawnsHome):
-            drawPawn(-1, player.number, screen, W, H, 0, i)
-    
+            drawPawn(-1, player.number, screen, W, H, 0, i, False)
     
     winner = 'no one'
     someoneWon = False
@@ -71,7 +70,6 @@ def gameVis(board, players):
     sixesThrown = 0
     capture = False
     canThrowAgain = False
-    
     
     while True:
         keyPressed = False
@@ -135,7 +133,6 @@ def gameVis(board, players):
                 canThrowAgain = False    
             
             ### redraw:
-            screen.fill((255, 255, 255))
             screen.blit(screen_copy, (0,0))        
             # draw board
             pawnSpots = [board.filledBoard.index(spot) for spot in board.filledBoard if spot]
@@ -144,14 +141,23 @@ def gameVis(board, players):
                 if len(board.filledBoard[pawnSpot]) == 2:
                     twoPawns = 1
                 for pawn in board.filledBoard[pawnSpot]:
-                    drawPawn(pawnSpot, int(pawn[6]), screen, W, H, twoPawns, 0)
+                    drawPawn(pawnSpot, int(pawn[6]), screen, W, H, twoPawns, 0, False)
                     twoPawns += 1
             # draw pawns at home
             for player in players:
                 for i in range(player.pawnsHome):
-                    drawPawn(-1, player.number, screen, W, H, 0, i)
-            # draw pawns at finish
-            
+                    drawPawn(-1, player.number, screen, W, H, 0, i, False)
+            # draw pawns at finish line
+            for i in range(4):
+                pawnSpots = [board.filledFinishLine[i].index(spot) for spot in board.filledFinishLine[i] if spot]
+                for pawnSpot in pawnSpots:
+                    twoPawns = 0
+                    if len(board.filledFinishLine[i][pawnSpot]) == 2:
+                        twoPawns = 1
+                    for pawn in board.filledFinishLine[i][pawnSpot]:
+                        drawPawn(pawnSpot, int(pawn[6]), screen, W, H, twoPawns, 0, True)
+                        twoPawns += 1
+            # draw finished pawns
             
             ###
                 

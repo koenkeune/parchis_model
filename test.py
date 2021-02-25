@@ -12,7 +12,7 @@ else:
 
 if play:
     players = list()
-    board = Board(68)
+    board = Board()
     players.append(Player(0, board.boardSize, 'safest'))
     players.append(Player(1, board.boardSize, 'furthest'))
     for j in range(2,4):
@@ -24,7 +24,7 @@ else:
         winners[i] = 0
         
     for i in range(runs):
-        board = Board(68)
+        board = Board()
         players = list()
         players.append(Player(0, board.boardSize, 'safest'))
         for j in range(1,4):
