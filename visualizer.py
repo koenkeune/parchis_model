@@ -1,9 +1,12 @@
 import pygame
 
-def drawBoard(screen, W, H):
+def drawBoard(screen, Wval, Hval):
     pygame.display.set_caption('Parchis')
     
-    global BLACK, WHITE, RED, GREEN, BLUE, YELLOW, GRAY
+    global BLACK, WHITE, RED, GREEN, BLUE, YELLOW, GRAY, W, H
+    
+    W = Wval
+    H = Hval
     
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
@@ -98,7 +101,7 @@ def drawBoard(screen, W, H):
     screen.blit(myfont.render(str(51), 1, BLACK), (12, H/2 - 9))
     screen.blit(myfont.render(str(17), 1, BLACK), ((20*W)/21 + 12, H/2 - 9))
 
-def getDrawingPos(posOfPawn, playerNum, W, H):
+def getDrawingPos(posOfPawn, playerNum):
     if posOfPawn in range(8):
         pos = ((5*W)/9 + W/19 + 4, ((41-(posOfPawn*2))*H)/42)
     elif posOfPawn in range(25,33):
@@ -126,7 +129,7 @@ def getDrawingPos(posOfPawn, playerNum, W, H):
         
     return(pos)
     
-def getDrawingPosFinish(posOfPawn, playerNum, W, H):
+def getDrawingPosFinish(posOfPawn, playerNum):
     if playerNum == 0:
         pos = (W/2, ((39-(posOfPawn*2))*H)/42)
     elif playerNum == 3:
@@ -138,7 +141,7 @@ def getDrawingPosFinish(posOfPawn, playerNum, W, H):
         
     return(pos)
     
-def getDrawingPosFinished(playerNum, pawnsFinished, W, H):
+def getDrawingPosFinished(playerNum, pawnsFinished):
     if playerNum == 0:
         finishPos = [(W/2, H/2 + 36), (W/2, H/2 + 76), (W/2 - 40, H/2 + 76), (W/2 + 40, H/2 + 76)]
     elif playerNum == 2:
@@ -151,7 +154,7 @@ def getDrawingPosFinished(playerNum, pawnsFinished, W, H):
     
     return(pos)
         
-def getDrawingPosHome(playerNum, pawnsInBase, W, H):
+def getDrawingPosHome(playerNum, pawnsInBase):
     if playerNum == 2:
         homePos = [(W/6 + 25, H/6 + 25), (W/6 - 25, H/6 + 25), (W/6 + 25, H/6 - 25), (W/6 - 25, H/6 - 25)]
     elif playerNum == 3:
@@ -164,7 +167,7 @@ def getDrawingPosHome(playerNum, pawnsInBase, W, H):
         
     return(pos)
     
-def getDrawingPosTwoPawns(posOfPawn, pos, twoPawns, finishLine, playerNum, W, H):
+def getDrawingPosTwoPawns(posOfPawn, pos, twoPawns, finishLine, playerNum):
     if ((not(finishLine) and posOfPawn in list(range(8)) + list(range(25,42)) + list(range(59, 67))) or 
         (finishLine and playerNum in [0,2])):  
         if twoPawns == 1:
@@ -192,17 +195,17 @@ def getPlayerColor(playerNum):
     elif playerNum == 3:
         return(GREEN)
 
-def drawPawn(posOfPawn, playerNum, screen, W, H, twoPawns, pawnsInBase, pawnsFinished, finishLine):
+def drawPawn(posOfPawn, playerNum, screen, twoPawns, pawnsInBase, pawnsFinished, finishLine):
     if posOfPawn == -1:
-        pos = getDrawingPosHome(playerNum, pawnsInBase, W, H)
+        pos = getDrawingPosHome(playerNum, pawnsInBase)
     elif finishLine:
-        pos = getDrawingPosFinish(posOfPawn, playerNum, W, H)
+        pos = getDrawingPosFinish(posOfPawn, playerNum)
     elif pawnsFinished > 0:
-        pos = getDrawingPosFinished(playerNum, pawnsFinished, W, H)
+        pos = getDrawingPosFinished(playerNum, pawnsFinished)
     else:
-        pos = getDrawingPos(posOfPawn, playerNum, W, H)
+        pos = getDrawingPos(posOfPawn, playerNum)
     if twoPawns > 0:
-        pos = getDrawingPosTwoPawns(posOfPawn, pos, twoPawns, finishLine, playerNum, W, H)
+        pos = getDrawingPosTwoPawns(posOfPawn, pos, twoPawns, finishLine, playerNum)
     color = getPlayerColor(playerNum)
     if color == RED:
         darkColor = (200, 0, 0)
