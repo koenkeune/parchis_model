@@ -21,7 +21,7 @@ class Player:
         elif newPos == 0:
             self.pawnsHome -= 1
         self.pawns[pawn] = newPos
-        if newPos >= (boardSize + 3): # if outside board, should be equal
+        if newPos >= (boardSize + 2): # if outside board, should be equal
             del self.pawns[pawn]
             self.pawnsFinished += 1
             
@@ -223,7 +223,6 @@ class Board: # now only the small board variant
             elif pos in self.startingPoints and len(self.filledBoard[pos]) == 2:
                 j = int(self.filledBoard[pos][0][6])
                 k = int(self.filledBoard[pos][1][6])
-                print('i:', i, 'j:', j, 'k:', k)
                 if i != k: # capture last pawn first
                     capture = True
                     players[k].makeMove(self.filledBoard[pos][1], -1, self.boardSize)
@@ -232,6 +231,6 @@ class Board: # now only the small board variant
                     capture = True
                     players[j].makeMove(self.filledBoard[pos][0], -1, self.boardSize)
                     self.filledBoard[pos].remove(self.filledBoard[pos][0])
-                print('could capture:', capture)
+                
             
         return(capture)

@@ -46,9 +46,6 @@ def game(board, players):
                 winner = players[i].name
             i += 1
     
-    for player in players:
-        print(player.name, 'has:', player.pawnsHome, 'pawns at home')
-    
     return(board.filledBoard, winner, j)
     
 def gameVis(board, players):
