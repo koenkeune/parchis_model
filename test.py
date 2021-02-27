@@ -13,10 +13,12 @@ else:
 if play:
     players = list()
     board = Board()
-    players.append(Player(0, board.boardSize, 'furthest'))
+    players.append(Player(0, board.boardSize, 'safest'))
     players.append(Player(1, board.boardSize, 'furthest'))
-    for j in range(2,4):
-        players.append(Player(j, board.boardSize, 'furthest'))
+    players.append(Player(2, board.boardSize, 'furthest'))
+    players.append(Player(3, board.boardSize, 'furthest'))
+    # for j in range(2,4):
+        # players.append(Player(j, board.boardSize, 'furthest'))
     result = gameVis(board, players)
 else:
     winners = {}
@@ -26,9 +28,10 @@ else:
     for i in range(runs):
         board = Board()
         players = list()
-        players.append(Player(0, board.boardSize, 'furthest'))
-        for j in range(1,4):
-            players.append(Player(j, board.boardSize, 'furthest'))
+        players.append(Player(0, board.boardSize, 'safest'))
+        players.append(Player(1, board.boardSize, 'furthest'))
+        players.append(Player(2, board.boardSize, 'furthest'))
+        players.append(Player(3, board.boardSize, 'furthest'))
         result = game(board, players)
         winners[int(result[1][6])] += 1
 
@@ -37,5 +40,5 @@ else:
         print(result[1], 'WON! in', result[2], 'steps')
     else:
         for i in range(4):
-            print('player', i, 'won:', (winners[i] / runs) * 100, '% of the games')
+            print('player', i, 'with stategy', players[i].strategy, 'won:', (winners[i] / runs) * 100, '% of the games')
 

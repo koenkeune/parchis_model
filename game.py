@@ -156,9 +156,9 @@ def gameVis(board, players):
                         drawPawn(pawnSpot, int(pawn[6]), screen, twoPawns, 0, 0, True)
                         twoPawns += 1
             # draw finished pawns
-            for player in players:
-                for i in range(player.pawnsFinished):
-                    drawPawn(0, i, screen, 0, 0, player.pawnsFinished, False)
+            for i in range(4):
+                for j in range(players[i].pawnsFinished):
+                    drawPawn(0, i, screen, 0, 0, j + 1, False)
             ###
                 
 def getPlayerColorString(playerNum):

@@ -67,16 +67,12 @@ class Player:
             pawnValues = {}
             for pawn in self.pawns:
                 if self.pawns[pawn] not in pawnValues:
-                    pawnValues[pawn] = 1
+                    pawnValues[self.pawns[pawn]] = 1
                 else:
-                    if pawnValues[pawn] == 1:
-                        pawnsToMove.append(pawn)
-                    pawnValues[pawn] += 1
+                    if pawnValues[self.pawns[pawn]] == 1 and self.pawns[pawn] > -1:
+                        pawnsToMove.append(pawn) # pawns in a bridge
+                    pawnValues[self.pawns[pawn]] += 1
             pawnsToMove = self.findNonBlockedMoves(board, stepsForward, pawnsToMove)
-            pawnsToMoveBridge = {i for i,j in pawnValues.items() if i in pawnsToMove and j > 1} # if in bridge and can open
-            if pawnsToMoveBridge:
-                pawnsToMove = pawnsToMoveBridge
-                print('pawnsToMove:', pawnsToMoveBridge)
         elif stepsForward == 5: # look first to go to startingPoint
             pawnsAtStart = [i for i,j in self.pawns.items() if j == 0]
             if len(pawnsAtStart) != 2:
@@ -125,7 +121,7 @@ class Player:
 # should reorganize  
 def calcSafetyRank(players, board, plNum, stepsForward, pos, hasPawnsAtBase, hasBridges, futureMove):
     safetyRank = 0
-    if pos in board.safeSpots or pos == players[plNum].startingPoint:
+    if pos in board.safeSpots or pos == players[plNum].startingPoint or pos > board.boardSize - 5:
         safetyRank = 1
     elif len(board.filledBoard[pos]) == 2 and pos not in board.startingPoints:
         safetyRank = 1
@@ -147,7 +143,7 @@ def countPawnsBehind(players, board, plNum, stepsForward, pos, hasPawnsAtBase, h
     otherPlNums = set(range(4)) - {plNum}
     for otherPlNum in otherPlNums:
         pawnsPerPlayerBehind[otherPlNum] = 0
-    for i in range(1,7): # should be 7 back in the case when all pawns of another player are on board
+    for i in range(1,7): # should be 1,8 in the case when all pawns of another player are on board
         comPos = (pos - i) % board.boardSize
         pawnsBehind = board.filledBoard[comPos]
         if pawnsBehind:
