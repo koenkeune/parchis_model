@@ -55,10 +55,7 @@ def gameVis(board, players):
     screen = pygame.display.set_mode((W, H))
     drawBoard(screen, W, H)
     screen_copy = screen.copy()
-    # draw pawns at home
-    for player in players:
-        for i in range(player.pawnsHome):
-            drawPawn(-1, player.number, screen, 0, i, 0, False)
+    drawPawnsAtHome(screen, players)
     
     winner = 'no one'
     someoneWon = False
@@ -67,21 +64,26 @@ def gameVis(board, players):
     sixesThrown = 0
     capture = False
     canThrowAgain = False
+    waitingForMove = False
     
     while True:
-        keyPressed = False
+        nextStep = False
+        key1 = False
+        key2 = False
+        key3 = False
+        key4 = False
+        
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
             elif event.type == KEYUP:
-                keyPressed = True
+                if event.key == K_SPACE or event.key == K_b:
+                    nextStep = True
         
         pygame.display.update()
         
-        if keyPressed:
-            if t >= numPlayers:
-                t = 0
+        if nextStep and not waitingForMove: # and not players[t].strategy == 'player'
             if capture:
                 capture = False
             else:    
@@ -102,10 +104,51 @@ def gameVis(board, players):
             pawnsToMove = players[t].findPawnsToMove(board, stepsForward)
             print('pawns to move:', pawnsToMove)
             if pawnsToMove:
-                if len(pawnsToMove) == 1: # or at the same pos
-                    pawn = pawnsToMove[0]
+                if players[t].strategy == 'player': # draw virtual moves and let the player pick a move
+                    finishedVirtual = 0
+                    playerBoard = board.filledBoard[:] # make copy
+                    playerFinishBoard = board.filledFinishLine[:] # make copy
+                    for i in range(len(pawnsToMove)):
+                        positions = players[t].findNewPos(pawnsToMove[i], stepsForward)
+                        if positions[1] < board.boardSize - 5:
+                            pos = (positions[1] + players[t].startingPoint) % board.boardSize
+                            playerBoard[pos] = [players[t].name + 'VirtualMove' + str(i+1)]
+                        elif positions[1] < board.boardSize + 2:
+                            playerFinishBoard[t][positions[1]] = [players[t].name + 'VirtualMove' + str(i+1)]
+                        else:
+                            finishedVirtual += 1
+                    
+                    screen.blit(screen_copy, (0,0))
+                    print(playerBoard)
+                    drawPawnsOnBoard(screen, playerBoard)
+                    drawPawnsAtHome(screen, players)
+                    drawPawnsAtFinishline(screen, playerFinishBoard)
+                    drawFinishedPawns(screen, players)
+                    drawFinishedVirtualMoves(screen, players, t, finishedVirtual, 1)
+                    pygame.display.update()
+                    
+                    pawnNumber = False
+                    while not pawnNumber:
+                        for event in pygame.event.get():
+                            if event.type == QUIT:
+                                pygame.quit()
+                                sys.exit()
+                            elif event.type == KEYUP:
+                                if event.key == K_1:
+                                    key1 = True
+                                elif event.key == K_2:
+                                    key2 = True
+                                elif event.key == K_3:
+                                    key3 = True
+                                elif event.key == K_4:
+                                    key4 = True
+                        pawnNumber = getPawnNumber(len(pawnsToMove), [key1, key2, key3, key4])
+                    pawn = pawnsToMove[pawnNumber-1]
                 else:
-                    pawn = players[t].performStrategy(players, board, pawnsToMove, t, stepsForward) # move in head
+                    if len(pawnsToMove) == 1: # or at the same pos
+                        pawn = pawnsToMove[0]
+                    else:
+                        pawn = players[t].performStrategy(players, board, pawnsToMove, t, stepsForward) # move in head
                 print('will move:', pawn)
                 positions = players[t].findNewPos(pawn, stepsForward) # move in head
                 if sixesThrown == 3 and positions[1] < board.boardSize: # remove only if it didn't land in the end zone
@@ -126,40 +169,21 @@ def gameVis(board, players):
             
             if not(capture) and not(canThrowAgain):
                 t += 1
+                if t >= numPlayers:
+                    t = 0
                 sixesThrown = 0
             if canThrowAgain:
-                canThrowAgain = False    
+                canThrowAgain = False
             
-            ### redraw:
-            screen.blit(screen_copy, (0,0))        
-            # draw board
-            pawnSpots = [board.filledBoard.index(spot) for spot in board.filledBoard if spot]
-            for pawnSpot in pawnSpots:
-                twoPawns = 0
-                if len(board.filledBoard[pawnSpot]) == 2:
-                    twoPawns = 1
-                for pawn in board.filledBoard[pawnSpot]:
-                    drawPawn(pawnSpot, int(pawn[6]), screen, twoPawns, 0, 0, False)
-                    twoPawns += 1
-            # draw pawns at home
-            for player in players:
-                for i in range(player.pawnsHome):
-                    drawPawn(-1, player.number, screen, 0, i, 0, False)
-            # draw pawns at finish line
-            for i in range(4):
-                pawnSpots = [board.filledFinishLine[i].index(spot) for spot in board.filledFinishLine[i] if spot]
-                for pawnSpot in pawnSpots:
-                    twoPawns = 0
-                    if len(board.filledFinishLine[i][pawnSpot]) == 2:
-                        twoPawns = 1
-                    for pawn in board.filledFinishLine[i][pawnSpot]:
-                        drawPawn(pawnSpot, int(pawn[6]), screen, twoPawns, 0, 0, True)
-                        twoPawns += 1
-            # draw finished pawns
-            for i in range(4):
-                for j in range(players[i].pawnsFinished):
-                    drawPawn(0, i, screen, 0, 0, j + 1, False)
-            ###
+            # redraw:
+            screen.blit(screen_copy, (0,0))
+            drawPawnsOnBoard(screen, board.filledBoard)
+            drawPawnsAtHome(screen, players)
+            drawPawnsAtFinishline(screen, board.filledFinishLine)
+            drawFinishedPawns(screen, players)
+            
+            
+            
                 
 def getPlayerColorString(playerNum):
     if playerNum == 0:
@@ -170,4 +194,12 @@ def getPlayerColorString(playerNum):
         return('RED')
     elif playerNum == 3:
         return('GREEN')
+        
+def getPawnNumber(numberOfOptions, numberPressed):
+    pawnNumber = False
+    for i in range(numberOfOptions):
+        if numberPressed[i] == True:
+            pawnNumber = i + 1
+    
+    return(pawnNumber)
     

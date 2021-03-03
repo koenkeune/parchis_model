@@ -187,15 +187,15 @@ def getDrawingPosTwoPawns(posOfPawn, pos, twoPawns, finishLine, playerNum):
         
 def getPlayerColor(playerNum):
     if playerNum == 0:
-        return(YELLOW)
+        return(YELLOW, (200, 200, 0))
     elif playerNum == 1:
-        return(BLUE)
+        return(BLUE, (0,0, 200))
     elif playerNum == 2:
-        return(RED)
+        return(RED, (200, 0, 0))
     elif playerNum == 3:
-        return(GREEN)
+        return(GREEN, (0, 200, 0))
 
-def drawPawn(posOfPawn, playerNum, screen, twoPawns, pawnsInBase, pawnsFinished, finishLine):
+def drawPawn(posOfPawn, playerNum, screen, twoPawns, pawnsInBase, pawnsFinished, finishLine, virtualMove):
     if posOfPawn == -1:
         pos = getDrawingPosHome(playerNum, pawnsInBase)
     elif finishLine:
@@ -206,22 +206,59 @@ def drawPawn(posOfPawn, playerNum, screen, twoPawns, pawnsInBase, pawnsFinished,
         pos = getDrawingPos(posOfPawn, playerNum)
     if twoPawns > 0:
         pos = getDrawingPosTwoPawns(posOfPawn, pos, twoPawns, finishLine, playerNum)
-    color = getPlayerColor(playerNum)
-    if color == RED:
-        darkColor = (200, 0, 0)
-    elif color == BLUE:
-        darkColor = (0,0, 200)
-    elif color == YELLOW:
-        darkColor = (200, 200, 0)
-    elif color == GREEN:
-        darkColor = (0, 200, 0)
+    colors = getPlayerColor(playerNum)
     posX = pos[0]
     posY = pos[1]
-    pygame.draw.circle(screen, color, pos, H/42 - 2, 0)
-    pygame.draw.circle(screen, darkColor, pos, H/42 - 2, 4)
-    pygame.draw.line(screen, darkColor, (posX - 8, posY - 8), (posX + 8, posY + 8), 4)
-    pygame.draw.line(screen, darkColor, (posX + 8, posY - 8), (posX - 8, posY + 8), 4)
-    
+    if virtualMove > 0:
+        pygame.draw.circle(screen, (220, 220, 220), pos, H/42 - 2, 0)
+        pygame.draw.circle(screen, colors[1], pos, H/42 - 2, 4)
+        myfont = pygame.font.SysFont("arialblack", 22)
+        screen.blit(myfont.render(str(virtualMove), False, colors[1]), (posX - 6, posY - 18))
+    else:
+        pygame.draw.circle(screen, colors[0], pos, H/42 - 2, 0)
+        pygame.draw.circle(screen, colors[1], pos, H/42 - 2, 4)
+        pygame.draw.line(screen, colors[1], (posX - 8, posY - 8), (posX + 8, posY + 8), 4)
+        pygame.draw.line(screen, colors[1], (posX + 8, posY - 8), (posX - 8, posY + 8), 4)
+ 
+def drawPawnsOnBoard(screen, filledBoard):
+    pawnSpots = [filledBoard.index(spot) for spot in filledBoard if spot]
+    for pawnSpot in pawnSpots:
+        twoPawns = 0
+        if len(filledBoard[pawnSpot]) == 2:
+            twoPawns = 1
+        for pawn in filledBoard[pawnSpot]:
+            if pawn[7:18] == 'VirtualMove':
+                drawPawn(pawnSpot, int(pawn[6]), screen, twoPawns, 0, 0, False, int(pawn[18:]))
+            else:
+                drawPawn(pawnSpot, int(pawn[6]), screen, twoPawns, 0, 0, False, 0)
+            twoPawns += 1
 
+def drawPawnsAtHome(screen, players):
+    for player in players:
+        for i in range(player.pawnsHome):
+            drawPawn(-1, player.number, screen, 0, i, 0, False, 0)
+
+def drawPawnsAtFinishline(screen, filledFinishLine):
+    for i in range(4):
+        pawnSpots = [filledFinishLine[i].index(spot) for spot in filledFinishLine[i] if spot]
+        for pawnSpot in pawnSpots:
+            twoPawns = 0
+            if len(filledFinishLine[i][pawnSpot]) == 2:
+                twoPawns = 1
+            for pawn in filledFinishLine[i][pawnSpot]:
+                if pawn[7:18] == 'VirtualMove':
+                    drawPawn(pawnSpot, int(pawn[6]), screen, twoPawns, 0, 0, True, int(pawn[18:]))
+                else:
+                    drawPawn(pawnSpot, int(pawn[6]), screen, twoPawns, 0, 0, True, 0)
+                twoPawns += 1
+
+def drawFinishedPawns(screen, players):
+    for i in range(4):
+        for j in range(players[i].pawnsFinished):
+            drawPawn(0, i, screen, 0, 0, j + 1, False, 0)    
+    
+def drawFinishedVirtualMoves(screen, players, i, finishedVirtual, virtualMove):
+    for j in range(finishedVirtual):
+        drawPawn(0, i, screen, 0, 0, players[i].pawnsFinished + 1, False, virtualMove)
     
 
