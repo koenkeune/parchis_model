@@ -2,6 +2,8 @@ from random import randrange
 from visualizer import *
 import pygame, sys
 from pygame.locals import *
+from board import *
+import copy
     
 # runs one game according to the rules    
 def game(board, players):
@@ -28,7 +30,7 @@ def game(board, players):
                         if len(pawnsToMove) == 1: # or at the same pos
                             pawn = pawnsToMove[0]
                         else:
-                            pawn = players[i].performStrategy(players, board, pawnsToMove, i, stepsForward) # move in head
+                            pawn = players[i].performStrategy(players, board, pawnsToMove, stepsForward) # move in head
                         positions = players[i].findNewPos(pawn, stepsForward) # move in head
                         if sixesThrown == 3 and positions[1] < board.boardSize: # remove only if it didn't land in the end zone
                             players[i].makeMove(pawn, -1, board.boardSize)
@@ -78,7 +80,7 @@ def gameVis(board, players):
                 pygame.quit()
                 sys.exit()
             elif event.type == KEYUP:
-                if event.key == K_SPACE or event.key == K_b:
+                if event.key == K_SPACE or event.key == K_RETURN:
                     nextStep = True
         
         pygame.display.update()
@@ -105,26 +107,28 @@ def gameVis(board, players):
             print('pawns to move:', pawnsToMove)
             if pawnsToMove:
                 if players[t].strategy == 'player': # draw virtual moves and let the player pick a move
-                    finishedVirtual = 0
-                    playerBoard = board.filledBoard[:] # make copy
-                    playerFinishBoard = board.filledFinishLine[:] # make copy
+                    finishedVirtual = []
+                    virtualBoard = copy.deepcopy(board)
                     for i in range(len(pawnsToMove)):
                         positions = players[t].findNewPos(pawnsToMove[i], stepsForward)
                         if positions[1] < board.boardSize - 5:
                             pos = (positions[1] + players[t].startingPoint) % board.boardSize
-                            playerBoard[pos] = [players[t].name + 'VirtualMove' + str(i+1)]
+                            virtualBoard.filledBoard[pos].append(players[t].name + 'VirtualMove' + str(i+1))
                         elif positions[1] < board.boardSize + 2:
-                            playerFinishBoard[t][positions[1]] = [players[t].name + 'VirtualMove' + str(i+1)]
+                            pos = positions[1] - (board.boardSize - 5)
+                            virtualBoard.filledFinishLine[t][pos].append(players[t].name + 'VirtualMove' + str(i+1))
                         else:
-                            finishedVirtual += 1
+                            finishedVirtual.append(i)
                     
+                    # print(virtualBoard.filledBoard )
+                    # print(board.filledFinishLine)
+                    # print(virtualBoard.filledFinishLine)
                     screen.blit(screen_copy, (0,0))
-                    print(playerBoard)
-                    drawPawnsOnBoard(screen, playerBoard)
+                    drawPawnsOnBoard(screen, virtualBoard.filledBoard)
                     drawPawnsAtHome(screen, players)
-                    drawPawnsAtFinishline(screen, playerFinishBoard)
+                    drawPawnsAtFinishline(screen, virtualBoard.filledFinishLine)
                     drawFinishedPawns(screen, players)
-                    drawFinishedVirtualMoves(screen, players, t, finishedVirtual, 1)
+                    drawFinishedVirtualMoves(screen, players, t, finishedVirtual)
                     pygame.display.update()
                     
                     pawnNumber = False
@@ -148,7 +152,7 @@ def gameVis(board, players):
                     if len(pawnsToMove) == 1: # or at the same pos
                         pawn = pawnsToMove[0]
                     else:
-                        pawn = players[t].performStrategy(players, board, pawnsToMove, t, stepsForward) # move in head
+                        pawn = players[t].performStrategy(players, board, pawnsToMove, stepsForward) # move in head
                 print('will move:', pawn)
                 positions = players[t].findNewPos(pawn, stepsForward) # move in head
                 if sixesThrown == 3 and positions[1] < board.boardSize: # remove only if it didn't land in the end zone
@@ -161,11 +165,11 @@ def gameVis(board, players):
                     if capture:
                         stepsForward = 20
                         
-            # someoneWon = (len(players[t].pawns) == 0) # not(self.pawns)
-            # if someoneWon:
-                # winner = players[t].name
+            someoneWon = (len(players[t].pawns) == 0) # not(self.pawns)
+            if someoneWon:
+                print(players[t].name, 'HAS WON!!!')
             
-            print('capture', capture, 'canThrowAgain', canThrowAgain)
+            # print('capture?', capture, 'can throw again?', canThrowAgain)
             
             if not(capture) and not(canThrowAgain):
                 t += 1

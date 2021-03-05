@@ -257,8 +257,8 @@ def drawFinishedPawns(screen, players):
         for j in range(players[i].pawnsFinished):
             drawPawn(0, i, screen, 0, 0, j + 1, False, 0)    
     
-def drawFinishedVirtualMoves(screen, players, i, finishedVirtual, virtualMove):
-    for j in range(finishedVirtual):
-        drawPawn(0, i, screen, 0, 0, players[i].pawnsFinished + 1, False, virtualMove)
+def drawFinishedVirtualMoves(screen, players, i, virtualMoves):
+    for j in range(len(virtualMoves)):
+        drawPawn(0, i, screen, 0, 0, players[i].pawnsFinished + j + 1, False, virtualMoves[j])
     
 

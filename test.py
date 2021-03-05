@@ -15,7 +15,7 @@ if play:
     board = Board()
     players.append(Player(0, board.boardSize, 'player'))
     players.append(Player(1, board.boardSize, 'safest'))
-    players.append(Player(2, board.boardSize, 'player'))
+    players.append(Player(2, board.boardSize, 'furthest'))
     players.append(Player(3, board.boardSize, 'furthest'))
     # for j in range(2,4):
         # players.append(Player(j, board.boardSize, 'furthest'))
