@@ -7,7 +7,6 @@ import copy
     
 # runs one game according to the rules    
 def game(board, players):
-    winner = 'no one'
     someoneWon = False
     numPlayers = len(players)
     j = 0
@@ -45,10 +44,10 @@ def game(board, players):
                     diceNumber = 0 # a number to get out of the while loop 
                 someoneWon = (len(players[i].pawns) == 0) # not(self.pawns)
             if someoneWon:
-                winner = players[i].name
+                winner = i
             i += 1
     
-    return(board.filledBoard, winner, j)
+    return(board.filledBoard, players[winner].name, players[winner].strategy, j)
     
 def gameVis(board, players):
     pygame.init()
@@ -118,11 +117,11 @@ def gameVis(board, players):
                             pos = positions[1] - (board.boardSize - 5)
                             virtualBoard.filledFinishLine[t][pos].append(players[t].name + 'VirtualMove' + str(i+1))
                         else:
-                            finishedVirtual.append(i)
+                            finishedVirtual.append(i+1)
                     
-                    # print(virtualBoard.filledBoard )
-                    # print(board.filledFinishLine)
-                    # print(virtualBoard.filledFinishLine)
+                    print(virtualBoard.filledBoard )
+                    print(board.filledFinishLine)
+                    print(virtualBoard.filledFinishLine)
                     screen.blit(screen_copy, (0,0))
                     drawPawnsOnBoard(screen, virtualBoard.filledBoard)
                     drawPawnsAtHome(screen, players)

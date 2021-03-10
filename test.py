@@ -1,4 +1,5 @@
 import sys
+from random import shuffle
 from board import *
 from game import *
 
@@ -21,24 +22,25 @@ if play:
         # players.append(Player(j, board.boardSize, 'furthest'))
     result = gameVis(board, players)
 else:
+    strategies = ['safest', 'safest', 'furthest', 'furthest']
     winners = {}
     for i in range(4):
-        winners[i] = 0
+        winners[strategies[i]] = 0
         
     for i in range(runs):
         board = Board()
         players = list()
-        players.append(Player(0, board.boardSize, 'safest'))
-        players.append(Player(1, board.boardSize, 'furthest'))
-        players.append(Player(2, board.boardSize, 'furthest'))
-        players.append(Player(3, board.boardSize, 'furthest'))
+        shuffle(strategies) # the order of the players is randomized
+        for j in range(4):
+            players.append(Player(j, board.boardSize, strategies[j]))
         result = game(board, players)
-        winners[int(result[1][6])] += 1
+        winners[result[2]] += 1
 
     if runs == 1:
         print(result[0])
-        print(result[1], 'WON! in', result[2], 'steps')
+        print(result[1], 'with strategy', result[2], 'won in', result[3], 'steps')
     else:
-        for i in range(4):
-            print('player', i, 'with stategy', players[i].strategy, 'won:', (winners[i] / runs) * 100, '% of the games')
+        allStrategies = set(strategies)
+        for strategy in allStrategies:
+            print('stategy', strategy, 'won:', (winners[strategy] / runs) * 100, '% of the games')
 

@@ -81,7 +81,6 @@ class Player:
                     pawnsToMove = [pawnsToMove[0]] # more don't matter
         if not pawnsToMove:
             pawnsToMove = [i for i,j in self.pawns.items() if j > -1]
-            print('pawnsToMove + blocked:', pawnsToMove)
             pawnsToMove = self.findNonBlockedMoves(board, stepsForward, pawnsToMove)
                         
         return(pawnsToMove)
