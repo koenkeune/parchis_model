@@ -22,7 +22,7 @@ if play:
         # players.append(Player(j, board.boardSize, 'furthest'))
     result = gameVis(board, players)
 else:
-    strategies = ['safest', 'safest', 'furthest', 'furthest']
+    strategies = ['safest', 'furthest', 'furthest', 'furthest']
     winners = {}
     for i in range(4):
         winners[strategies[i]] = 0
@@ -41,6 +41,13 @@ else:
         print(result[1], 'with strategy', result[2], 'won in', result[3], 'steps')
     else:
         allStrategies = set(strategies)
+        strategiesRepeats = {} # correct for repeated strategies in game
+        for strategy in strategies:
+            if strategy in strategiesRepeats:
+                strategiesRepeats[strategy] += 1
+            else:
+                strategiesRepeats[strategy] = 1
+            
         for strategy in allStrategies:
-            print('stategy', strategy, 'won:', (winners[strategy] / runs) * 100, '% of the games')
+            print('stategy', strategy, 'won:', (winners[strategy] / runs / strategiesRepeats[strategy]) * 100, '% of the games')
 
