@@ -1,10 +1,16 @@
-1 wie het hoogste gooit begint
-2 wanneer je 5 gooit dan moet je altijd van een fiche van thuis op het bord zetten (behalve als er al 2 staan, of er geen thuis meer zijn), als er 2 staan en 1 of meer zijn niet van de speler dan wordt de laatste ander pion naar huis gestuurd en mag de 20 stappen zetten (als het mogelijk is)
-3 als alle fiches van huis zijn wordt elke 6 een 7
-4 als je 3x een 6 gooit moet je terug naar huis met het fiche dat je het laatst had bewogen, behalve als die aankomt in de finishlijn
-5 2 fiches van dezelfde kleur vormen een brug die niet gepasseerd kan worden, of 2 fiches van verschillende kleur in een safe spot
-6 als de speler een brug heeft en 6 gooit moet die speler de brug openen (de speler kan kiezen als er meerdere bruggen zijn)
-7 als de speler komt op een pion van een andere speler en die niet op een veilige plek staat dan slaat die de speler, de pion van de andere speler moet terug naar huis en de speler mag een pion 20 stappen naar voren zetten (als het mogelijk is)
-8 voor de eindpositie moet de speler er exact terecht komen (bruggen maken niet uit denk ik)
+1 The one who throws the highest dice number starts
+2 If a player arrives at the same spot of another pawn of theirs or of another player's pawn on a safespot then it will form a bridge where no pawn can enter or pass through
+3 If a player arrives at the same spot of another player's pawn and it is not on a safe spot then it will capture that pawn and move 20 steps forward with one of their pawns if possible
+4 When you throw 5 you have to move a pawn from home to start
+	4.1a Unless, 2 pawns of the player are at start already
+	4.1b Unless, no more pawns at home
+	4.2 If, there are 1 or more pawns from other players at home then the player captures a pawn of the last arriving player
+5 When you throw 6 you try to move 6 and can throw again
+	5.1 If there are not pawns at home then you move 7
+	5.2 If you have a bridge then you have to open it, if you can
+6 if you throw 3 times a 6 then you have to send the pawn that was last moved home
+	6.1 Except, if the pawn last moved arrived at the colored spots
+7 After a pawn arrives at the finish spot then the player can move 10 spots
+8 A player wins once all of their pawns moved exactly at the finish spot
 
-3x 6 is safe als het er buiten landt
+
