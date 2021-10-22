@@ -51,17 +51,16 @@ def game(board, players):
     
 def gameVis(board, players):
     pygame.init()
-    W = 900
-    H = 900
+    W = 800
+    H = 800
     screen = pygame.display.set_mode((W, H))
     drawBoard(screen, W, H)
     screen_copy = screen.copy()
     drawPawnsAtHome(screen, players)
     
-    winner = 'no one'
     someoneWon = False
     numPlayers = len(players)
-    t = 0 # turn
+    t = throwDiceForStart(numPlayers)
     sixesThrown = 0
     capture = False
     canThrowAgain = False
@@ -185,8 +184,20 @@ def gameVis(board, players):
             drawPawnsAtFinishline(screen, board.filledFinishLine)
             drawFinishedPawns(screen, players)
             
-            
-            
+def throwDiceForStart(numPlayers):
+    thrownNumber = [[i,0] for i in range(numPlayers)]
+
+    while len(thrownNumber) > 1:
+        for i in range(len(thrownNumber)):
+            diceNumber = randrange(1,7)
+            thrownNumber[i][1] = diceNumber
+            print(getPlayerColorString(thrownNumber[i][0]), 'rolled', diceNumber)  
+        highestDice = max([elem[1] for elem in thrownNumber])
+        thrownNumber = [[num, dice] for num, dice in thrownNumber if dice == highestDice]
+        
+    print(getPlayerColorString(thrownNumber[0][0]), 'starts the game')
+
+    return(thrownNumber[0][0])
                 
 def getPlayerColorString(playerNum):
     if playerNum == 0:
@@ -194,9 +205,9 @@ def getPlayerColorString(playerNum):
     elif playerNum == 1:
         return('blue')
     elif playerNum == 2:
-        return('RED')
+        return('red')
     elif playerNum == 3:
-        return('GREEN')
+        return('green')
         
 def getPawnNumber(numberOfOptions, numberPressed):
     pawnNumber = False
