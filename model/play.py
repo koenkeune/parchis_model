@@ -1,6 +1,5 @@
 import sys
 from random import shuffle
-from board import *
 from game import *
 
 play = False
@@ -13,8 +12,7 @@ else:
 
 if play:
     strategies = ['player', 'safest', 'furthest', 'furthest']
-    gameInst = game(strategies)
-    gameInst.playGame()
+    Game(strategies).playGame()
 else:
     strategies = ['safest', 'safest', 'furthest', 'furthest']
     winners = {}
@@ -22,15 +20,14 @@ else:
         winners[strategies[i]] = 0
         
     for i in range(runs):
-        board = Board()
         shuffle(strategies) # the order of the players is randomized
-        gameInst = game(strategies)
-        gameInst.simGame()
-        winners[gameInst.players[gameInst.winner].strategy] += 1
+        gamePlayed = Game(strategies)
+        gamePlayed.simGame()
+        winners[gamePlayed.players[gamePlayed.winner].strategy] += 1
 
     if runs == 1:
-        print(gameInst.board.filledBoard)
-        print(gameInst.players[gameInst.winner].name, 'with strategy', gameInst.players[gameInst.winner].strategy, 'won in', gameInst.steps, 'steps')
+        print(gamePlayed.board.filledBoard)
+        print(gamePlayed.players[gamePlayed.winner].name, 'with strategy', gamePlayed.players[gamePlayed.winner].strategy, 'won in', gamePlayed.steps, 'steps')
     else:
         allStrategies = set(strategies)
         strategiesRepeats = {} # correct for repeated strategies in game
@@ -42,6 +39,3 @@ else:
             
         for strategy in allStrategies:
             print('stategy', strategy, 'won:', (winners[strategy] / runs / strategiesRepeats[strategy]) * 100, '% of the games')
-      
-      
-

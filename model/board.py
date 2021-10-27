@@ -233,5 +233,4 @@ class Board: # now only the small board variant
                     players[j].makeMove(self.filledBoard[pos][0], -1, self.boardSize)
                     self.filledBoard[pos].remove(self.filledBoard[pos][0])
                 
-            
         return(capture)

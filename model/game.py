@@ -1,11 +1,12 @@
-from random import randrange
-from visualizer import *
-import pygame, sys
+import pygame, os, sys, copy
 from pygame.locals import *
-from board import *
-import copy
+from random import randrange
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__)) # make sure it can be called from testing
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+from model.board import *
+from model.visualizer import *
     
-class game:
+class Game:
     def __init__(self, strategies):
         self.players = list()
         self.board = Board()
@@ -67,7 +68,7 @@ class game:
         
         someoneWon = False
         numPlayers = len(self.players)
-        t = throwDiceForStart(numPlayers)
+        t = throwDiceForStart(numPlayers, True)
         sixesThrown = 0
         capture = False
         canThrowAgain = False
@@ -192,20 +193,22 @@ class game:
                 drawPawnsAtHome(screen, self.players)
                 drawPawnsAtFinishline(screen, self.board.filledFinishLine)
                 drawFinishedPawns(screen, self.players)
-                
-# extra functions for game.play():                
-def throwDiceForStart(numPlayers):
+        
+# extra functions for playgame():                
+def throwDiceForStart(numPlayers, printResults):
     thrownNumber = [[i,0] for i in range(numPlayers)]
 
     while len(thrownNumber) > 1:
         for i in range(len(thrownNumber)):
             diceNumber = randrange(1,7)
             thrownNumber[i][1] = diceNumber
-            print(getPlayerColorString(thrownNumber[i][0]), 'rolled', diceNumber)  
+            if printResults:
+                print(getPlayerColorString(thrownNumber[i][0]), 'rolled', diceNumber)  
         highestDice = max([elem[1] for elem in thrownNumber])
         thrownNumber = [[num, dice] for num, dice in thrownNumber if dice == highestDice]
         
-    print(getPlayerColorString(thrownNumber[0][0]), 'starts the game')
+    if printResults:
+        print(getPlayerColorString(thrownNumber[0][0]), 'starts the game')
 
     return(thrownNumber[0][0])
                 
@@ -226,4 +229,4 @@ def getPawnNumber(numberOfOptions, numberPressed):
             pawnNumber = i + 1
     
     return(pawnNumber)
-    
+        
