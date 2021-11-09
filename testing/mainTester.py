@@ -13,11 +13,15 @@ class ParchisTester(unittest.TestCase):
 
     def test_rule1(self):
         tester = RulesTester(self.game)
-        assert tester.check_rule1_simGame()
-        assert tester.check_rule1_playGame()
+        assert tester.check_rule1()
         
     def test_rule4(self):
-        assert True
+        tester = RulesTester(self.game)
+        assert tester.check_rule4()
+        
+    def test_rule4_1a(self):
+        tester = RulesTester(self.game)
+        assert tester.check_rule4a()    
         
         
 if __name__ == "__main__":
