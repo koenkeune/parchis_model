@@ -12,9 +12,9 @@ else:
 
 if play:
     strategies = ['player', 'safest', 'furthest', 'furthest']
-    Game(strategies).playGame()
+    GamePlayer(strategies).playGame()
 else:
-    strategies = ['safest', 'safest', 'furthest', 'furthest']
+    strategies = ['safest', 'safest', 'furthest', 'safest']
     winners = {}
     for i in range(4):
         winners[strategies[i]] = 0
@@ -30,12 +30,12 @@ else:
         print(gamePlayed.players[gamePlayed.winner].name, 'with strategy', gamePlayed.players[gamePlayed.winner].strategy, 'won in', gamePlayed.steps, 'steps')
     else:
         allStrategies = set(strategies)
-        strategiesRepeats = {} # correct for repeated strategies in game
-        for strategy in strategies:
-            if strategy in strategiesRepeats:
-                strategiesRepeats[strategy] += 1
-            else:
-                strategiesRepeats[strategy] = 1
+        # strategiesRepeats = {} # correct for repeated strategies in game
+        # for strategy in strategies:
+            # if strategy in strategiesRepeats:
+                # strategiesRepeats[strategy] += 1
+            # else:
+                # strategiesRepeats[strategy] = 1
             
         for strategy in allStrategies:
-            print('stategy', strategy, 'won:', (winners[strategy] / runs / strategiesRepeats[strategy]) * 100, '% of the games')
+            print('stategy', strategy, 'won:', (winners[strategy] / runs) * 100, '% of the games')
