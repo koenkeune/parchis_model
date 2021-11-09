@@ -16,5 +16,9 @@ class ParchisTester(unittest.TestCase):
         assert tester.check_rule1_simGame()
         assert tester.check_rule1_playGame()
         
+    def test_rule4(self):
+        assert True
+        
+        
 if __name__ == "__main__":
     unittest.main()
