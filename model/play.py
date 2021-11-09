@@ -1,5 +1,4 @@
 import sys
-from random import shuffle
 from game import *
 
 play = False
@@ -20,7 +19,6 @@ else:
         winners[strategies[i]] = 0
         
     for i in range(runs):
-        shuffle(strategies) # the order of the players is randomized
         gamePlayed = Game(strategies)
         gamePlayed.simGame()
         winners[gamePlayed.players[gamePlayed.winner].strategy] += 1

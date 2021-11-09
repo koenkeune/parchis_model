@@ -25,7 +25,7 @@ class Game:
         
     def simGame(self):
         capture = False
-        turn = 0
+        turn = self.throwDiceForStart()
     
         while not(self.someoneWon):
             if not capture:
@@ -85,14 +85,31 @@ class Game:
             self.canThrowAgain = False
     
         return(diceNumber)
+        
+    def throwDiceForStart(self):
+        thrownNumber = [[i,0] for i in range(self.numPlayers)]
+
+        while len(thrownNumber) > 1:
+            for i in range(len(thrownNumber)):
+                diceNumber = randrange(1,7)
+                thrownNumber[i][1] = diceNumber
+                if self.printResults:
+                    print(self.playerColors[thrownNumber[i][0]], 'rolled', diceNumber)  
+            highestDice = max([elem[1] for elem in thrownNumber])
+            thrownNumber = [[num, dice] for num, dice in thrownNumber if dice == highestDice]
+            
+        if self.printResults:
+            print(self.playerColors[thrownNumber[0][0]], 'starts the game')
+
+        return(thrownNumber[0][0])    
 
 
 class GamePlayer(Game): # plays one game
     def __init__(self, strategies):
         super().__init__(strategies)
+        self.printResults = True
         self.W = 800
         self.H = 800
-        self.printResults = True
         pygame.init()
         self.screen = pygame.display.set_mode((self.W, self.H))
         drawBoard(self.screen, self.W, self.H)
@@ -199,21 +216,4 @@ class GamePlayer(Game): # plays one game
             pawnNumber = getPawnNumber(len(pawnsToMove), [key1, key2, key3, key4])
             
         return(pawnsToMove[pawnNumber-1])
-             
-    def throwDiceForStart(self):
-        thrownNumber = [[i,0] for i in range(self.numPlayers)]
-
-        while len(thrownNumber) > 1:
-            for i in range(len(thrownNumber)):
-                diceNumber = randrange(1,7)
-                thrownNumber[i][1] = diceNumber
-                if self.printResults:
-                    print(self.playerColors[thrownNumber[i][0]], 'rolled', diceNumber)  
-            highestDice = max([elem[1] for elem in thrownNumber])
-            thrownNumber = [[num, dice] for num, dice in thrownNumber if dice == highestDice]
-            
-        if self.printResults:
-            print(self.playerColors[thrownNumber[0][0]], 'starts the game')
-
-        return(thrownNumber[0][0])
         
