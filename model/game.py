@@ -87,21 +87,20 @@ class Game:
         return(diceNumber)
         
     def throwDiceForStart(self):
-        thrownNumber = [[i,0] for i in range(self.numPlayers)]
+        thrownNumbers = [[i,0] for i in range(self.numPlayers)]
 
-        while len(thrownNumber) > 1:
-            for i in range(len(thrownNumber)):
-                diceNumber = randrange(1,7)
-                thrownNumber[i][1] = diceNumber
+        while len(thrownNumbers) > 1:
+            for i, thrownNumber in enumerate(thrownNumbers):
+                thrownNumber[1] = randrange(1,7)
                 if self.printResults:
-                    print(self.playerColors[thrownNumber[i][0]], 'rolled', diceNumber)  
-            highestDice = max([elem[1] for elem in thrownNumber])
-            thrownNumber = [[num, dice] for num, dice in thrownNumber if dice == highestDice]
+                    print(self.playerColors[thrownNumber[0]], 'rolled', thrownNumber[1])  
+            highestDice = max([elem[1] for elem in thrownNumbers])
+            thrownNumbers = [[num, dice] for num, dice in thrownNumbers if dice == highestDice]
             
         if self.printResults:
-            print(self.playerColors[thrownNumber[0][0]], 'starts the game')
+            print(self.playerColors[thrownNumbers[0][0]], 'starts the game')
 
-        return(thrownNumber[0][0])    
+        return(thrownNumbers[0][0])       
 
 
 class GamePlayer(Game): # plays one game
@@ -166,8 +165,8 @@ class GamePlayer(Game): # plays one game
     def playerPickMove(self, t, stepsForward, pawnsToMove):
         finishedVirtual = []
         virtualBoard = copy.deepcopy(self.board)
-        for i in range(len(pawnsToMove)):
-            positions = self.players[t].findNewPos(pawnsToMove[i], stepsForward)
+        for i, pawnToMove in enumerate(pawnsToMove):
+            positions = self.players[t].findNewPos(pawnToMove, stepsForward)
             if positions[1] < self.board.boardSize - 5:
                 pos = (positions[1] + self.players[t].startingPoint) % self.board.boardSize
                 virtualBoard.filledBoard[pos].append(self.players[t].name + 'VirtualMove' + str(i+1))
