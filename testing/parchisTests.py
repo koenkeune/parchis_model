@@ -17,25 +17,35 @@ class RulesTester():
         
     def check_rule4(self):
         pl = 0 # turn of player
-        self.game.board.filledBoard = self.scenes.TEST1BOARD
-        self.game.players[pl].pawns = self.scenes.TEST1PLAYER0PAWNS
-        self.game.players[pl].pawnsHome = self.scenes.TEST1PLAYER0PAWNSHOME
-        self.game.players[pl].pawnsFinished = self.scenes.TEST1PLAYER0PAWNSFINISHED
+        self.game.board.filledBoard = self.scenes.Test4.BOARD
+        self.game.players[pl].pawns = self.scenes.Test4.PLAYER0PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test4.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test4.PLAYER0PAWNSFINISHED
         diceNumber = 5
         self.game.makeMove(pl, diceNumber)
-        pawnsAtHome = 1
         
-        return(self.game.board.filledBoard == self.scenes.TEST1BOARDAFTER)
+        return(self.game.board.filledBoard == self.scenes.Test4.BOARDAFTER)
         
-    def check_rule4a(self):
+    def check_rule4_1a(self):
         pl = 1
-        self.game.board.filledBoard = self.scenes.TEST2BOARD
-        self.game.players[pl].pawns = self.scenes.TEST2PLAYER1PAWNS
-        self.game.players[pl].pawnsHome = self.scenes.TEST2PLAYER1PAWNSHOME
-        self.game.players[pl].pawnsFinished = self.scenes.TEST2PLAYER1PAWNSFINISHED
+        self.game.board.filledBoard = self.scenes.Test4_1a.BOARD
+        self.game.players[pl].pawns = self.scenes.Test4_1a.PLAYER1PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test4_1a.PLAYER1PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test4_1a.PLAYER1PAWNSFINISHED
         self.game.players[pl].strategy = 'furthest'
         diceNumber = 5
         self.game.makeMove(pl, diceNumber)
-        pawnsAtHome = 1
         
-        return(self.game.board.filledBoard == self.scenes.TEST2BOARDAFTER)
+        return(self.game.board.filledBoard == self.scenes.Test4_1a.BOARDAFTER)
+        
+    def check_rule4_1b(self):
+        pl = 1
+        self.game.board.filledBoard = self.scenes.Test4_1b.BOARD
+        self.game.players[pl].pawns = self.scenes.Test4_1b.PLAYER1PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test4_1b.PLAYER1PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test4_1b.PLAYER1PAWNSFINISHED
+        self.game.players[pl].strategy = 'furthest'
+        diceNumber = 5
+        self.game.makeMove(pl, diceNumber)
+        
+        return(self.game.board.filledBoard == self.scenes.Test4_1b.BOARDAFTER)    
