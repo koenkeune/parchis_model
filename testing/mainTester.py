@@ -15,6 +15,11 @@ class ParchisTester(unittest.TestCase):
         tester = RulesTester(self.game)
         assert tester.check_rule1()
         
+    def test_rule3(self):
+        tester = RulesTester(self.game)
+        assert tester.check_rule3_case1()
+        assert tester.check_rule3_case2()
+        
     def test_rule4(self):
         tester = RulesTester(self.game)
         assert tester.check_rule4()
@@ -23,11 +28,11 @@ class ParchisTester(unittest.TestCase):
         tester = RulesTester(self.game)
         assert tester.check_rule4_1a() 
 
-    def test_rule_4_1b(self):
+    def test_rule4_1b(self):
         tester = RulesTester(self.game)
         assert tester.check_rule4_1b()
         
-    def test_rule_4_2(self):
+    def test_rule4_2(self):
         tester = RulesTester(self.game)
         assert tester.check_rule4_2()
         
