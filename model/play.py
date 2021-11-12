@@ -25,7 +25,7 @@ else:
 
     if runs == 1:
         print(gamePlayed.board.filledBoard)
-        print(gamePlayed.players[gamePlayed.winner].name, 'with strategy', gamePlayed.players[gamePlayed.winner].strategy, 'won in', gamePlayed.steps, 'steps')
+        print(gamePlayed.players[gamePlayed.winner].name, 'with strategy', gamePlayed.players[gamePlayed.winner].strategy, 'won in', gamePlayed.totalTurns, 'turns')
     else:
         allStrategies = set(strategies)
         # strategiesRepeats = {} # correct for repeated strategies in game
