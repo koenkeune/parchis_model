@@ -25,6 +25,14 @@ class Scenarios(object):
         PLAYER1PAWNS = {'player1pawn0': 0, 'player1pawn1': 20, 'player1pawn2': 0, 'player1pawn3': 5}
         PLAYER1PAWNSHOME = 0
         PLAYER1PAWNSFINISHED = 0
+        
+    class Test4_2():
+        BOARD = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player0pawn0'], ['player1pawn0', 'player1pawn2'], [], [], [], [], ['player1pawn3'], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2', 'player1pawn1'], [], [], [], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], ['player0pawn2'], [], [], [], [], ['player3pawn0'], [], [], [], ['player0pawn1'], [], [], [], [], ['player3pawn3'], [], [], []]
+        BOARDAFTER = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player0pawn0'], ['player1pawn0', 'player1pawn2'], [], [], [], [], ['player1pawn3'], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2', 'player2pawn0'], [], [], [], [], [], [], ['player3pawn1'], [], [], [], [], ['player0pawn2'], [], [], [], [], ['player3pawn0'], [], [], [], ['player0pawn1'], [], [], [], [], ['player3pawn3'], [], [], ['player2pawn2']]
+        PLAYER1PAWNS = {'player2pawn0': -1, 'player2pawn1': -1, 'player2pawn2': 9, 'player2pawn3': -1}
+        PLAYER1PAWNSHOME = 3
+        PLAYER1PAWNSFINISHED = 0
+        
     
             
 def visualizeScenario(scenario):
