@@ -62,15 +62,62 @@ class Scenarios(object):
         PLAYER2PAWNSHOME = 3
         PLAYER2PAWNSFINISHED = 0
         
+    class Test5():
+        BOARD = [[], [], ['player1pawn2'], [], ['player0pawn0'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        BOARDAFTER = [[], [], ['player1pawn2'], [], [], [], [], [], [], [], [], [], [], ['player0pawn0'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        PLAYER0PAWNS = {'player0pawn0': 0, 'player0pawn1': -1, 'player0pawn2': -1, 'player0pawn3': -1}
+        PLAYER0PAWNSHOME = 3
+        PLAYER0PAWNSFINISHED = 0
+        
+    class Test5_1():
+        BOARD = [[], [], ['player1pawn2'], [], ['player0pawn0'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        BOARDAFTER = [[], [], ['player1pawn2'], [], [], [], [], [], [], [], [], ['player0pawn0'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        PLAYER0PAWNS = {'player0pawn0': 0}
+        PLAYER0PAWNSHOME = 0
+        PLAYER0PAWNSFINISHED = 3    
+    
+    class Test5_2():
+        BOARD = [[], [], ['player1pawn2'], [], ['player0pawn0', 'player0pawn1'], [], [], [], [], [], [], ['player0pawn2'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        BOARDAFTER = [[], [], ['player1pawn2'], [], ['player0pawn0'], [], [], [], [], [], ['player0pawn1'], [], ['player0pawn2'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        PLAYER0PAWNS = {'player0pawn0': 0, 'player0pawn1': 0, 'player0pawn2': 7, 'player0pawn3': -1}
+        PLAYER0PAWNSHOME = 1
+        PLAYER0PAWNSFINISHED = 0
+    
+    class Test5_3():
+        BOARD = [[], [], ['player1pawn2'], [], ['player0pawn0'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        BOARDAFTER = [[], [], ['player1pawn2'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        PLAYER0PAWNS = {'player0pawn0': 0, 'player0pawn1': -1, 'player0pawn2': -1, 'player0pawn3': -1}
+        PLAYER0PAWNSHOME = 3
+        PLAYER0PAWNSFINISHED = 0
+    
+    class Test5_3a_case1():
+        BOARD = [[], [], ['player1pawn2'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], ['player0pawn0'], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        BOARDAFTER = [[], [], ['player1pawn2'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]           
+        FINISHLINE = [[[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []]]
+        FINISHLINEAFTER = [[[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []]]
+        PLAYER0PAWNS = {'player0pawn0': 45, 'player0pawn1': -1, 'player0pawn2': -1, 'player0pawn3': -1}
+        PLAYER0PAWNSHOME = 3
+        PLAYER0PAWNSFINISHED = 0
+        
+    class Test5_3a_case2():
+        BOARD = [[], [], ['player1pawn2'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], ['player0pawn0'], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        BOARDAFTER = [[], [], ['player1pawn2'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ['player3pawn2'], [], [], ['player1pawn1'], [], [], [], ['player3pawn1'], [], ['player2pawn2'], [], [], [], [], [], [], [], ['player3pawn0'], [], [], [], [], [], [], [], [], ['player3pawn3'], [], [], []]
+        FINISHLINE = [[[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []]]
+        FINISHLINEAFTER = [[['player0pawn0'], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []]]
+        PLAYER0PAWNS = {'player0pawn0': 46, 'player0pawn1': -1, 'player0pawn2': -1, 'player0pawn3': -1}
+        PLAYER0PAWNSHOME = 3
+        PLAYER0PAWNSFINISHED = 0
     
             
-def visualizeScenario(scenario):
+def visualizeScenario(scenario, filledFinishLine = []):
     w = 800
     h = 800
     pygame.init()
     screen = pygame.display.set_mode((w, h))
     drawBoard(screen, w, h)
     drawPawnsOnBoard(screen, scenario)
+    if filledFinishLine:
+        drawPawnsAtFinishline(screen, filledFinishLine)
     while(True):
         for event in pygame.event.get():
             if event.type == QUIT:

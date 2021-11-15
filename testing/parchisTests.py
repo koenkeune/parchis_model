@@ -104,3 +104,71 @@ class RulesTester():
         self.game.playOneThrow(pl, diceNumber)
         
         return(self.game.board.filledBoard == self.scenes.Test4_2.BOARDAFTER)
+
+    def check_rule5(self):
+        pl = 0 # turn of player
+        self.game.board.filledBoard = self.scenes.Test5.BOARD
+        self.game.players[pl].pawns = self.scenes.Test5.PLAYER0PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test5.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test5.PLAYER0PAWNSFINISHED
+        diceNumbers = [6, 3]
+        self.game.playOneTurn(pl, diceNumbers)
+        
+        return(self.game.board.filledBoard == self.scenes.Test5.BOARDAFTER)
+        
+    def check_rule5_1(self):
+        pl = 0
+        self.game.players[pl].pawnsHome = 0
+        
+        return(self.game.determineStepsForward(pl, 6) == 7)    
+        
+    def check_rule5_2(self):
+        pl = 0 # turn of player
+        self.game.board.filledBoard = self.scenes.Test5_2.BOARD
+        self.game.players[pl].pawns = self.scenes.Test5_2.PLAYER0PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test5_2.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test5_2.PLAYER0PAWNSFINISHED
+        self.game.players[pl].strategy = 'furthest'
+        diceNumbers = [6, 1]
+        self.game.playOneTurn(pl, diceNumbers)
+        
+        return(self.game.board.filledBoard == self.scenes.Test5_2.BOARDAFTER)        
+        
+    def check_rule5_3(self):
+        pl = 0 # turn of player
+        self.game.board.filledBoard = self.scenes.Test5_3.BOARD
+        self.game.players[pl].pawns = self.scenes.Test5_3.PLAYER0PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test5_3.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test5_3.PLAYER0PAWNSFINISHED
+        diceNumbers = [6, 6, 6]
+        self.game.playOneTurn(pl, diceNumbers)
+        
+        return(self.game.board.filledBoard == self.scenes.Test5_3.BOARDAFTER)
+
+    def check_rule5_3a_case1(self): # boundary test 1
+        pl = 0 # turn of player
+        self.game.board.filledBoard = self.scenes.Test5_3a_case1.BOARD
+        self.game.board.filledFinishLine = self.scenes.Test5_3a_case1.FINISHLINE
+        self.game.players[pl].pawns = self.scenes.Test5_3a_case1.PLAYER0PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test5_3a_case1.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test5_3a_case1.PLAYER0PAWNSFINISHED
+        self.game.sixesThrown = 0
+        diceNumbers = [6, 6, 6]
+        self.game.playOneTurn(pl, diceNumbers)
+        
+        return(self.game.board.filledBoard == self.scenes.Test5_3a_case1.BOARDAFTER and 
+            self.game.board.filledFinishLine == self.scenes.Test5_3a_case1.FINISHLINEAFTER)
+        
+    def check_rule5_3a_case2(self): # boundary test 2
+        pl = 0 # turn of player
+        self.game.board.filledBoard = self.scenes.Test5_3a_case2.BOARD
+        self.game.board.filledFinishLine = self.scenes.Test5_3a_case2.FINISHLINE
+        self.game.players[pl].pawns = self.scenes.Test5_3a_case2.PLAYER0PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test5_3a_case2.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test5_3a_case2.PLAYER0PAWNSFINISHED
+        self.game.sixesThrown = 0
+        diceNumbers = [6, 6, 6]
+        self.game.playOneTurn(pl, diceNumbers)
+        
+        return(self.game.board.filledBoard == self.scenes.Test5_3a_case2.BOARDAFTER and 
+            self.game.board.filledFinishLine == self.scenes.Test5_3a_case2.FINISHLINEAFTER)    

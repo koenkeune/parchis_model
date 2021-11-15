@@ -44,6 +44,27 @@ class ParchisTester(unittest.TestCase):
         tester = RulesTester(self.game)
         assert tester.check_rule4_2()
         
+    def test_rule5(self):
+        tester = RulesTester(self.game)
+        assert tester.check_rule5()
+
+    def test_rule5_1(self):
+        tester = RulesTester(self.game)
+        assert tester.check_rule5_1() 
+     
+    def test_rule5_2(self):
+        tester = RulesTester(self.game)
+        assert tester.check_rule5_2() 
+     
+    def test_rule5_3(self):
+        tester = RulesTester(self.game)
+        assert tester.check_rule5_3() 
+
+    def test_rule5_3a(self):
+        tester = RulesTester(self.game)
+        assert tester.check_rule5_3a_case1()
+        assert tester.check_rule5_3a_case2()
+        
         
 if __name__ == "__main__":
     unittest.main()
