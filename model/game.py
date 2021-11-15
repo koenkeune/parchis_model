@@ -15,7 +15,7 @@ class Game:
         self.players.append(Player(2, self.board.boardSize, strategies[2]))
         self.players.append(Player(3, self.board.boardSize, strategies[3]))
         self.winner = -1
-        self.totalTurns = 1 # total turns
+        self.totalTurns = 1
         self.canThrowAgain = False
         self.sixesThrown = 0
         self.someoneWon = False
@@ -34,17 +34,22 @@ class Game:
                 turn = 0
             self.sixesThrown = 0
             
-    def playOneTurn(self, turn):
+    def playOneTurn(self, turn, diceNumbers = []):
         self.canThrowAgain = True
+        i = 0
         while self.canThrowAgain:
-            diceNumber = randrange(1,7)
-            stepsForward = self.determineStepsForward(diceNumber)
+            if diceNumbers:
+                diceNumber = diceNumbers[i]
+            else:
+                diceNumber = randrange(1,7)
+            stepsForward = self.determineStepsForward(turn, diceNumber)
             self.playOneThrow(turn, stepsForward)
             
             self.someoneWon = (len(self.players[turn].pawns) == 0)
             if self.someoneWon:
                 self.winner = turn
                 self.canThrowAgain = False
+            i += 1
             
     def playOneThrow(self, turn, stepsForward):
         capture = False
@@ -55,7 +60,6 @@ class Game:
             capture = self.makeMove(turn, stepsForward)
             if not(capture):
                 hasThrow = False
-    
     
     def makeMove(self, i, stepsForward):
         capture = False
@@ -73,7 +77,7 @@ class Game:
             if self.printResults:
                 print('will move:', pawn)        
             positions = self.players[i].findNewPos(pawn, stepsForward) # move in head
-            if self.sixesThrown == 3 and positions[1] < self.board.boardSize: # remove only if it didn't land in the end zone
+            if self.sixesThrown == 3 and positions[1] < (self.board.boardSize - 4): # remove only if it didn't land in the end zone
                 self.players[i].makeMove(pawn, -1, self.board.boardSize)
                 self.board.makeMove(self.players, i, pawn, positions[0], -1) # can only remove if it is on the board
             else:
@@ -84,10 +88,12 @@ class Game:
         
         return(capture)
     
-    def determineStepsForward(self, diceNumber): # should add +7 if all pawns are on table
+    def determineStepsForward(self, turn, diceNumber): # should add +7 if all pawns are on table
         if diceNumber == 6:
             self.canThrowAgain = True
             self.sixesThrown += 1
+            if self.players[turn].pawnsHome == 0:
+                diceNumber = 7
             if self.sixesThrown == 3:
                 self.canThrowAgain = False
         else:
@@ -128,7 +134,7 @@ class GamePlayer(Game): # plays one game
         t = self.throwDiceForStart()
         capture = False
         
-        while not(self.someoneWon):
+        while True: #not(self.someoneWon):
             nextStep = False
             
             for event in pygame.event.get():
@@ -145,7 +151,7 @@ class GamePlayer(Game): # plays one game
                 if capture:
                     stepsForward = 20
                 else:    
-                    stepsForward = self.determineStepsForward()
+                    stepsForward = self.determineStepsForward(t, randrange(1,7))
                 
                 print(self.board.filledBoard)
                 print(self.playerColors[t], 'can move:', stepsForward)
