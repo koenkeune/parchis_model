@@ -253,9 +253,9 @@ def drawPawnsAtFinishline(screen, filledFinishLine):
                 twoPawns += 1
 
 def drawFinishedPawns(screen, players):
-    for i in range(4):
-        for j in range(players[i].pawnsFinished):
-            drawPawn(0, i, screen, 0, 0, j + 1, False, 0)    
+    for player in players:
+        for j in range(player.pawnsFinished):
+            drawPawn(0, player.number, screen, 0, 0, j + 1, False, 0)    
     
 def drawFinishedVirtualMoves(screen, players, i, virtualMoves):
     for j, virtualMove in enumerate(virtualMoves):
