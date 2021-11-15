@@ -15,6 +15,27 @@ class RulesTester():
             
         return(len(set(starts)) == numPlayers)
         
+    def check_rule2(self, diceNumber):
+        pl = 0
+        self.game.board.filledBoard = copy.deepcopy(self.scenes.Test2.BOARD) # deepcopy to be able to run it multiple times
+        self.game.players[pl].pawns = copy.deepcopy(self.scenes.Test2.PLAYER0PAWNS)
+        self.game.players[pl].pawnsHome = self.scenes.Test2.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test2.PLAYER0PAWNSFINISHED
+        self.game.makeMove(pl, diceNumber)
+        
+        return(self.game.board.filledBoard == self.scenes.Test2.BOARDAFTER) # true for dicenumbers larger than 1
+        
+    def check_rule2_1(self): # can't pass through own bridge also tested
+        pl = 3
+        self.game.board.filledBoard = self.scenes.Test2_1.BOARD
+        self.game.players[pl].pawns = self.scenes.Test2_1.PLAYER0PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test2_1.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test2_1.PLAYER0PAWNSFINISHED
+        diceNumber = 3
+        self.game.makeMove(pl, diceNumber)
+        
+        return(self.game.board.filledBoard == self.scenes.Test2_1.BOARDAFTER)
+        
     def check_rule3_case1(self):
         pl = 2
         self.game.board.filledBoard = self.scenes.Test3_case1.BOARD
