@@ -1,5 +1,6 @@
 1 The one who throws the highest dice number starts
-2 If a player arrives at the same spot of another pawn of theirs or of another player's pawn on a safespot then it will form a bridge where no pawn can enter or pass through
+2 If a player arrives at the same spot of another pawn of theirs or then it will form a bridge where no pawn can enter or pass through
+	2.1 Or if a player arrives at the same spot of another player's pawn on a safespot
 3 If a player arrives at the same spot of another player's pawn and it is not on a safe spot then it will capture that pawn and move 20 steps forward with one of their pawns if possible
 4 When you throw 5 you have to move a pawn from home to start
 	4.1a Unless, 2 pawns of the player are at start already
@@ -11,6 +12,10 @@
 6 if you throw 3 times a 6 then you have to send the pawn that was last moved home
 	6.1 Except, if the pawn last moved arrived at the colored spots
 7 After a pawn arrives at the finish spot then the player can move 10 spots
-8 A player wins once all of their pawns moved exactly at the finish spot
+8 A player wins they have their pawns first at the finish spot
+	8.1 Moving counterclockwise
+	8.2 From the starting position
+	8.3 Through the color spots of their color
+	8.4 To exactly the finish spot
 
 
