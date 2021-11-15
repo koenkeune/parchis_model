@@ -189,7 +189,7 @@ class Board: # now only the small board variant
     def makeMove(self, players, i, pawn, oldPosRel, newPosRel):
         newPos = (newPosRel + players[i].startingPoint) % self.boardSize
         oldPos = (oldPosRel + players[i].startingPoint) % self.boardSize
-        newPosFin = newPosRel - (self.boardSize - 5) # finish line pos
+        newPosFin = newPosRel - (self.boardSize - 4) # finish line pos
         if newPosFin < 0:
             if newPosRel == 0:
                 self.filledBoard[newPos].append(pawn) # add board
@@ -199,7 +199,7 @@ class Board: # now only the small board variant
                 self.filledBoard[newPos].append(pawn) # add board
                 self.filledBoard[oldPos].remove(pawn) # remove board
         else:
-            oldPosFin = oldPosRel - (self.boardSize - 5)
+            oldPosFin = oldPosRel - (self.boardSize - 4)
             if newPosFin > 6 and oldPosFin < 0:
                 self.filledBoard[oldPos].remove(pawn) # remove board
             elif newPosFin >= 0 and oldPosFin < 0:
