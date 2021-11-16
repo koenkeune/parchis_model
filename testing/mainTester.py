@@ -16,12 +16,10 @@ class ParchisTester(unittest.TestCase):
     
     def test_rule2(self):
         tester = RulesTester(self.game)
-        assert tester.check_rule2(2)
-        assert tester.check_rule2(3)
-        
-    def test_rule2_1(self):
-        tester = RulesTester(self.game)
-        assert tester.check_rule2_1()
+        assert tester.check_rule2_case1(2)
+        assert tester.check_rule2_case1(3)
+        assert tester.check_rule2_case2()
+        assert tester.check_rule2_case3()
         
     def test_rule3(self):
         tester = RulesTester(self.game)
@@ -54,8 +52,9 @@ class ParchisTester(unittest.TestCase):
      
     def test_rule5_2(self):
         tester = RulesTester(self.game)
-        assert tester.check_rule5_2() 
-     
+        assert tester.check_rule5_2_case1() 
+        assert tester.check_rule5_2_case2()
+        
     def test_rule5_3(self):
         tester = RulesTester(self.game)
         assert tester.check_rule5_3() 
@@ -64,6 +63,12 @@ class ParchisTester(unittest.TestCase):
         tester = RulesTester(self.game)
         assert tester.check_rule5_3a_case1()
         assert tester.check_rule5_3a_case2()
+        
+    def test_rule6(self):
+        tester = RulesTester(self.game)
+        assert tester.check_rule6(1)
+        assert tester.check_rule6(2)
+        assert tester .check_rule6(3)
         
         
 if __name__ == "__main__":

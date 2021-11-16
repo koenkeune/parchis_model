@@ -15,26 +15,37 @@ class RulesTester():
             
         return(len(set(starts)) == numPlayers)
         
-    def check_rule2(self, diceNumber):
+    def check_rule2_case1(self, diceNumber):
         pl = 0
-        self.game.board.filledBoard = copy.deepcopy(self.scenes.Test2.BOARD) # deepcopy to be able to run it multiple times
-        self.game.players[pl].pawns = copy.deepcopy(self.scenes.Test2.PLAYER0PAWNS)
-        self.game.players[pl].pawnsHome = self.scenes.Test2.PLAYER0PAWNSHOME
-        self.game.players[pl].pawnsFinished = self.scenes.Test2.PLAYER0PAWNSFINISHED
+        self.game.board.filledBoard = copy.deepcopy(self.scenes.Test2_case1.BOARD) # deepcopy to be able to run it multiple times
+        self.game.players[pl].pawns = copy.deepcopy(self.scenes.Test2_case1.PLAYER0PAWNS)
+        self.game.players[pl].pawnsHome = self.scenes.Test2_case1.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test2_case1.PLAYER0PAWNSFINISHED
         self.game.makeMove(pl, diceNumber)
         
-        return(self.game.board.filledBoard == self.scenes.Test2.BOARDAFTER) # true for dicenumbers larger than 1
+        return(self.game.board.filledBoard == self.scenes.Test2_case1.BOARDAFTER) # true for dicenumbers larger than 1
         
-    def check_rule2_1(self): # can't pass through own bridge also tested
+    def check_rule2_case2(self): 
         pl = 3
-        self.game.board.filledBoard = self.scenes.Test2_1.BOARD
-        self.game.players[pl].pawns = self.scenes.Test2_1.PLAYER0PAWNS
-        self.game.players[pl].pawnsHome = self.scenes.Test2_1.PLAYER0PAWNSHOME
-        self.game.players[pl].pawnsFinished = self.scenes.Test2_1.PLAYER0PAWNSFINISHED
+        self.game.board.filledBoard = self.scenes.Test2_case2.BOARD
+        self.game.players[pl].pawns = self.scenes.Test2_case2.PLAYER3PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test2_case2.PLAYER3PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test2_case2.PLAYER3PAWNSFINISHED
         diceNumber = 3
         self.game.makeMove(pl, diceNumber)
         
-        return(self.game.board.filledBoard == self.scenes.Test2_1.BOARDAFTER)
+        return(self.game.board.filledBoard == self.scenes.Test2_case2.BOARDAFTER)
+        
+    def check_rule2_case3(self): # can't pass through own bridge
+        pl = 3
+        self.game.board.filledBoard = self.scenes.Test2_case3.BOARD
+        self.game.players[pl].pawns = self.scenes.Test2_case3.PLAYER3PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test2_case3.PLAYER3PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test2_case3.PLAYER3PAWNSFINISHED
+        diceNumber = 2
+        self.game.makeMove(pl, diceNumber)
+        
+        return(self.game.board.filledBoard == self.scenes.Test2_case3.BOARDAFTER)    
         
     def check_rule3_case1(self):
         pl = 2
@@ -122,17 +133,29 @@ class RulesTester():
         
         return(self.game.determineStepsForward(pl, 6) == 7)    
         
-    def check_rule5_2(self):
+    def check_rule5_2_case1(self):
         pl = 0 # turn of player
-        self.game.board.filledBoard = self.scenes.Test5_2.BOARD
-        self.game.players[pl].pawns = self.scenes.Test5_2.PLAYER0PAWNS
-        self.game.players[pl].pawnsHome = self.scenes.Test5_2.PLAYER0PAWNSHOME
-        self.game.players[pl].pawnsFinished = self.scenes.Test5_2.PLAYER0PAWNSFINISHED
+        self.game.board.filledBoard = self.scenes.Test5_2_case1.BOARD
+        self.game.players[pl].pawns = self.scenes.Test5_2_case1.PLAYER0PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test5_2_case1.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test5_2_case1.PLAYER0PAWNSFINISHED
         self.game.players[pl].strategy = 'furthest'
         diceNumbers = [6, 1]
         self.game.playOneTurn(pl, diceNumbers)
         
-        return(self.game.board.filledBoard == self.scenes.Test5_2.BOARDAFTER)        
+        return(self.game.board.filledBoard == self.scenes.Test5_2_case1.BOARDAFTER)
+        
+    def check_rule5_2_case2(self):
+        pl = 0 # turn of player
+        self.game.board.filledBoard = self.scenes.Test5_2_case2.BOARD
+        self.game.players[pl].pawns = self.scenes.Test5_2_case2.PLAYER0PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test5_2_case2.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test5_2_case2.PLAYER0PAWNSFINISHED
+        self.game.players[pl].strategy = 'furthest'
+        diceNumbers = [6, 1]
+        self.game.playOneTurn(pl, diceNumbers)
+        
+        return(self.game.board.filledBoard == self.scenes.Test5_2_case2.BOARDAFTER)     
         
     def check_rule5_3(self):
         pl = 0 # turn of player
@@ -171,4 +194,29 @@ class RulesTester():
         self.game.playOneTurn(pl, diceNumbers)
         
         return(self.game.board.filledBoard == self.scenes.Test5_3a_case2.BOARDAFTER and 
-            self.game.board.filledFinishLine == self.scenes.Test5_3a_case2.FINISHLINEAFTER)    
+            self.game.board.filledFinishLine == self.scenes.Test5_3a_case2.FINISHLINEAFTER)
+
+    def check_rule6(self, diceNumber):
+        pl = 0 # turn of player
+        self.game.board.filledBoard = copy.deepcopy(self.scenes.Test6.BOARD)
+        self.game.board.filledFinishLine = copy.deepcopy(self.scenes.Test6.FINISHLINE)
+        self.game.players[pl].pawns = copy.deepcopy(self.scenes.Test6.PLAYER0PAWNS)
+        self.game.players[pl].pawnsHome = self.scenes.Test6.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = copy.deepcopy(self.scenes.Test6.PLAYER0PAWNSFINISHED)
+        self.game.players[pl].strategy = 'furthest'
+        self.game.makeMove(pl, diceNumber)
+        
+        # print(self.game.board.filledBoard)
+        # print(self.game.board.filledFinishLine)
+        
+        if diceNumber == 1:
+            return(self.game.board.filledBoard == self.scenes.Test6.BOARDAFTER1 and 
+                self.game.board.filledFinishLine == self.scenes.Test6.FINISHLINEAFTER1)
+        if diceNumber == 2:
+            return(self.game.board.filledBoard == self.scenes.Test6.BOARDAFTER2 and 
+                self.game.board.filledFinishLine == self.scenes.Test6.FINISHLINEAFTER2)
+        elif diceNumber == 3:
+            return(self.game.board.filledBoard == self.scenes.Test6.BOARDAFTER3 and 
+                self.game.board.filledFinishLine == self.scenes.Test6.FINISHLINEAFTER3)
+        else:
+            return(False)
