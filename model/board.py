@@ -21,7 +21,7 @@ class Player:
         elif newPos == 0:
             self.pawnsHome -= 1
         self.pawns[pawn] = newPos
-        if newPos >= (boardSize + 2): # if outside board, should be equal
+        if newPos == (boardSize + 3):
             del self.pawns[pawn]
             self.pawnsFinished += 1
     
@@ -68,7 +68,7 @@ class Player:
                     if len(board.filledFinishLine[self.number][finishPos]) == 2:
                         bridge = True
                 step += 1
-            if bridge:
+            if (self.pawns[pawn] + stepsForward) > (board.boardSize + 3) or bridge: # blocked by end of map or bridge
                 blockedPawns.append(pawn)
                     
         return(list(set(pawnsToMove) - set(blockedPawns)))
@@ -114,8 +114,8 @@ class Player:
         hasPawnsAtBase = {}
         hasBridges = {}
         for otherPlNum in otherPlNums:
-            hasPawnsAtBase[otherPlNum] = bool([i for i,j in self.pawns.items() if j == -1])
-            hasBridges[otherPlNum] = bool([i for i,j in enumerate(board.filledBoard) if len(j) == 2])
+            hasPawnsAtBase[otherPlNum] = bool([i for i in players[otherPlNum].pawns.values() if i == -1])
+            hasBridges[otherPlNum] = len(players[otherPlNum].pawns.values()) != len(set(players[otherPlNum].pawns.values()))
         safetyScore = {}
         for pawn in pawnsToMove:
             relPos = self.pawns[pawn]
