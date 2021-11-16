@@ -24,42 +24,6 @@ class Player:
         if newPos >= (boardSize + 2): # if outside board, should be equal
             del self.pawns[pawn]
             self.pawnsFinished += 1
-            
-    def performStrategy(self, players, board, pawnsToMove, stepsForward):
-        if self.strategy == 'furthest':
-            pawnToMove = self.findFurthestPawn(pawnsToMove)
-        elif self.strategy == 'safest':
-            pawnToMove = self.findSafestMove(players, board, pawnsToMove, stepsForward)
-            
-        return(pawnToMove)
-    
-    def findFurthestPawn(self, pawnsToMove):
-        pawns = {i:j for i,j in self.pawns.items() if i in pawnsToMove} # get pawns from pawnstomove (probably ugly code)
-        maxValue = max(pawns.values())
-        furthestPawn = list(pawns.keys())[list(pawns.values()).index(maxValue)]
-        
-        return(furthestPawn)
-        
-    def findSafestMove(self, players, board, pawnsToMove, stepsForward):
-        safeScores = self.calcSafetyScores(players, board, pawnsToMove, stepsForward) # dont calculate when pawn is not on board 
-        safestMove = max(safeScores, key=safeScores.get)
-        safestMoves = []
-        for safeScore in safeScores:
-            if safeScores[safeScore] == safeScores[safestMove]:
-                safestMoves.append(safeScore)
-        if len(safestMoves) > 1:
-            return(self.findFurthestPawn(safestMoves))
-        else:
-            return(safestMoves[0])
-        
-    def findNewPos(self, pawn, stepsForward):
-        oldPos = self.pawns[pawn]
-        if oldPos != -1:
-            newPos = oldPos + stepsForward
-        else:
-            newPos = 0
-            
-        return(oldPos, newPos)
     
     def findPawnsToMove(self, board, stepsForward):
         pawnsToMove = []
@@ -96,15 +60,54 @@ class Player:
                 if finishPos < 0:
                     pos = (relPos + self.startingPoint) % board.boardSize
                     if len(board.filledBoard[pos]) == 2:
-                        bridge = True
-                        blockedPawns.append(pawn)
+                        if step == stepsForward:
+                            bridge = True
+                        elif int(board.filledBoard[pos][0][6]) == int(board.filledBoard[pos][1][6]):
+                            bridge = True
                 elif finishPos < 7:
                     if len(board.filledFinishLine[self.number][finishPos]) == 2:
                         bridge = True
-                        blockedPawns.append(pawn)
                 step += 1
+            if bridge:
+                blockedPawns.append(pawn)
                     
         return(list(set(pawnsToMove) - set(blockedPawns)))
+        
+    def performStrategy(self, players, board, pawnsToMove, stepsForward):
+        if self.strategy == 'furthest':
+            pawnToMove = self.findFurthestPawn(pawnsToMove)
+        elif self.strategy == 'safest':
+            pawnToMove = self.findSafestMove(players, board, pawnsToMove, stepsForward)
+            
+        return(pawnToMove)
+    
+    def findFurthestPawn(self, pawnsToMove):
+        pawns = {i:j for i,j in self.pawns.items() if i in pawnsToMove} # get pawns from pawnstomove (probably ugly code)
+        maxValue = max(pawns.values())
+        furthestPawn = list(pawns.keys())[list(pawns.values()).index(maxValue)]
+        
+        return(furthestPawn)
+        
+    def findSafestMove(self, players, board, pawnsToMove, stepsForward):
+        safeScores = self.calcSafetyScores(players, board, pawnsToMove, stepsForward) # dont calculate when pawn is not on board 
+        safestMove = max(safeScores, key=safeScores.get)
+        safestMoves = []
+        for safeScore in safeScores:
+            if safeScores[safeScore] == safeScores[safestMove]:
+                safestMoves.append(safeScore)
+        if len(safestMoves) > 1:
+            return(self.findFurthestPawn(safestMoves))
+        else:
+            return(safestMoves[0])
+        
+    def findNewPos(self, pawn, stepsForward):
+        oldPos = self.pawns[pawn]
+        if oldPos != -1:
+            newPos = oldPos + stepsForward
+        else:
+            newPos = 0
+            
+        return(oldPos, newPos)
         
     def calcSafetyScores(self, players, board, pawnsToMove, stepsForward):
         otherPlNums = set(range(4)) - {self.number} # number of players is 4
