@@ -6,10 +6,10 @@
 ---------------
 Install pygame: `python -m pip install "pygame"`
 
-Run the code: `python model\play.py [runs]` 
+Run the code: `python model/play.py [runs]` 
 
-Test the code: `python testing\main.py`
+Test the code: `python testing/mainTester.py -v`
 
 'runs' is an optional parameter to specify the number of runs it should do. Without it you will have to play the game yourself against the computer. You make the game go forward with the enter key or the spacebar and you make a move with 1/2/3/4. The board along with the dice number thrown and the pawns to move will be printed.
 
-Testing will test if the rules specified in sources/rules.txt are correctly implemented, currently tests rule 1.
+'mainTester' tests if the rules specified in sources/rules.txt are correctly implemented. It confirms the tests by showing 'ok', else it would show 'FAIL' or 'ERROR'.
