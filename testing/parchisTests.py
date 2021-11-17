@@ -217,3 +217,17 @@ class RulesTester():
                 self.game.board.filledFinishLine == self.scenes.Test6.FINISHLINEAFTER3)
         else:
             return(False)
+            
+    def check_rule7(self):
+        pl = 0
+        self.game.board.filledBoard = self.scenes.Test7.BOARD
+        self.game.board.filledFinishLine = self.scenes.Test7.FINISHLINE
+        self.game.players[pl].pawns = self.scenes.Test7.PLAYER0PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.Test7.PLAYER0PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.Test7.PLAYER0PAWNSFINISHED
+        diceNumber = 2
+        self.game.playOneTurn(pl, [diceNumber])
+        
+        assert self.game.board.filledFinishLine == self.scenes.Test7.FINISHLINEAFTER
+        assert self.game.someoneWon == True
+        assert self.game.winner == pl

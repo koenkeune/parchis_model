@@ -134,7 +134,14 @@ class Scenarios(object):
         PLAYER0PAWNS = {'player0pawn0': 46, 'player0pawn1': 69, 'player0pawn2': -1, 'player0pawn3': -1}
         PLAYER0PAWNSHOME = 2
         PLAYER0PAWNSFINISHED = 0
-    
+        
+    class Test7():
+        BOARD = [[], [], [], [], [], [], [], [], [], [], [], ['player2pawn3'], [], [], [], [], [], [], [], [], [], ['player1pawn2'], [], [], [], [], [], [], [], [], [], ['player2pawn2'], [], ['player1pawn1'], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+        FINISHLINE = [[[], [], [], [], [], ['player0pawn3'], []], [[], [], [], [], [], [], ['player1pawn0']], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []]]
+        FINISHLINEAFTER = [[[], [], [], [], [], [], []], [[], [], [], [], [], [], ['player1pawn0']], [[], [], [], [], [], [], []], [[], [], [], [], [], [], []]]
+        PLAYER0PAWNS = {'player0pawn3': 69}
+        PLAYER0PAWNSHOME = 0
+        PLAYER0PAWNSFINISHED = 3
             
 def visualizeScenario(scenario, filledFinishLine = []):
     w = 800
