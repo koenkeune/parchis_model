@@ -5,6 +5,7 @@
  How To Use
 ---------------
 Install pygame: `python -m pip install "pygame"`
+and unittest: `python -m pip install "unittest"`
 
 Run the code: `python model/play.py [runs]` 
 
