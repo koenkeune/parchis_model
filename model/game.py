@@ -135,6 +135,7 @@ class GamePlayer(Game): # plays one game
     def playGame(self): # plays one game
         t = self.throwDiceForStart()
         capture = False
+        finish = False
         
         while True: #not(self.someoneWon):
             nextStep = False
@@ -152,6 +153,8 @@ class GamePlayer(Game): # plays one game
             if nextStep:
                 if capture:
                     stepsForward = 20
+                elif finish:
+                    stepsForward = 10
                 else:    
                     stepsForward = self.determineStepsForward(t, randrange(1,7))
                 
@@ -163,7 +166,7 @@ class GamePlayer(Game): # plays one game
                     self.winner = self.players[t].name
                     print(self.players[t].name, 'HAS WON!!!')
                 
-                if not(capture) and not(self.canThrowAgain):
+                if not(capture) and not(finish) and not(self.canThrowAgain):
                     t += 1
                     self.totalTurns += 1
                     if t >= self.numPlayers:
@@ -184,11 +187,11 @@ class GamePlayer(Game): # plays one game
         virtualBoard = copy.deepcopy(self.board)
         for i, pawnToMove in enumerate(pawnsToMove):
             positions = self.players[t].findNewPos(pawnToMove, stepsForward)
-            if positions[1] < self.board.boardSize - 5:
+            if positions[1] < self.board.boardSize - 4:
                 pos = (positions[1] + self.players[t].startingPoint) % self.board.boardSize
                 virtualBoard.filledBoard[pos].append(self.players[t].name + 'VirtualMove' + str(i+1))
-            elif positions[1] < self.board.boardSize + 2:
-                pos = positions[1] - (self.board.boardSize - 5)
+            elif positions[1] < self.board.boardSize + 3:
+                pos = positions[1] - (self.board.boardSize - 4)
                 virtualBoard.filledFinishLine[t][pos].append(self.players[t].name + 'VirtualMove' + str(i+1))
             else:
                 finishedVirtual.append(i+1)
