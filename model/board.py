@@ -190,10 +190,13 @@ class Board: # now only the small board variant
             self.safeSpots.append(i * 17 + 12 - 1)
             
     def makeMove(self, players, i, pawn, oldPosRel, newPosRel):
+        finish = False
+        capture = False
         newPos = (newPosRel + players[i].startingPoint) % self.boardSize
         oldPos = (oldPosRel + players[i].startingPoint) % self.boardSize
         newPosFin = newPosRel - (self.boardSize - 4) # finish line pos
         if newPosFin < 0:
+            capture = self.capturePawn(players, i, newPosRel)
             if newPosRel == 0:
                 self.filledBoard[newPos].append(pawn) # add board
             elif newPosRel == -1 and newPosRel != oldPosRel: # should be at exactly + 3
@@ -205,14 +208,18 @@ class Board: # now only the small board variant
             oldPosFin = oldPosRel - (self.boardSize - 4)
             if newPosFin > 6 and oldPosFin < 0:
                 self.filledBoard[oldPos].remove(pawn) # remove board
+                finish = True
             elif newPosFin >= 0 and oldPosFin < 0:
                 self.filledFinishLine[i][newPosFin].append(pawn) # add finish
                 self.filledBoard[oldPos].remove(pawn) # remove board
             elif newPosFin > 6:
                 self.filledFinishLine[i][oldPosFin].remove(pawn) # remove finish
+                finish = True
             elif newPosFin >= 0 and oldPosFin <= 6:
                 self.filledFinishLine[i][newPosFin].append(pawn) # add finish
                 self.filledFinishLine[i][oldPosFin].remove(pawn) # remove finish
+                
+        return(capture, finish)
             
     def capturePawn(self, players, i, posRel): # capture when there is another player at the same position        
         capture = False

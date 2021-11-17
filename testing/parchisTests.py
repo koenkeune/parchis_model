@@ -204,10 +204,7 @@ class RulesTester():
         self.game.players[pl].pawnsHome = self.scenes.Test6.PLAYER0PAWNSHOME
         self.game.players[pl].pawnsFinished = copy.deepcopy(self.scenes.Test6.PLAYER0PAWNSFINISHED)
         self.game.players[pl].strategy = 'furthest'
-        self.game.makeMove(pl, diceNumber)
-        
-        # print(self.game.board.filledBoard)
-        # print(self.game.board.filledFinishLine)
+        self.game.playOneThrow(pl, diceNumber)
         
         if diceNumber == 1:
             return(self.game.board.filledBoard == self.scenes.Test6.BOARDAFTER1 and 

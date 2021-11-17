@@ -25,7 +25,6 @@ class Game:
         
     def simGame(self):
         turn = self.throwDiceForStart()
-    
         while not(self.someoneWon):
             self.playOneTurn(turn)
             turn += 1
@@ -53,16 +52,20 @@ class Game:
             
     def playOneThrow(self, turn, stepsForward):
         capture = False
+        finish = False
         hasThrow = True
         while hasThrow:
             if capture:
                 stepsForward = 20
-            capture = self.makeMove(turn, stepsForward)
-            if not(capture):
+            elif finish:
+                stepsForward = 10
+            capture, finish = self.makeMove(turn, stepsForward)
+            if not(capture) and not(finish):
                 hasThrow = False
     
     def makeMove(self, i, stepsForward):
         capture = False
+        finish = False
         pawnsToMove = self.players[i].findPawnsToMove(self.board, stepsForward)
         if self.printResults:
             print('pawns to move:', pawnsToMove)
@@ -82,11 +85,10 @@ class Game:
                 self.board.makeMove(self.players, i, pawn, positions[0], -1) # can only remove if it is on the board
             else:
                 self.players[i].makeMove(pawn, positions[1], self.board.boardSize) # move in head
-                capture = self.board.capturePawn(self.players, i, positions[1])
-                self.board.makeMove(self.players, i, pawn, positions[0], positions[1]) # move in real life
+                capture, finish = self.board.makeMove(self.players, i, pawn, positions[0], positions[1]) # move in real life
         self.someoneWon = (len(self.players[i].pawns) == 0) # not(self.pawns)
         
-        return(capture)
+        return(capture, finish)
     
     def determineStepsForward(self, turn, diceNumber): # should add +7 if all pawns are on table
         if diceNumber == 6:
@@ -155,7 +157,7 @@ class GamePlayer(Game): # plays one game
                 
                 print(self.board.filledBoard)
                 print(self.playerColors[t], 'can move:', stepsForward)
-                capture = self.makeMove(t, stepsForward)
+                capture, finish = self.makeMove(t, stepsForward)
                 
                 if self.someoneWon:
                     self.winner = self.players[t].name
