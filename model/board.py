@@ -27,7 +27,7 @@ class Player:
     
     def findPawnsToMove(self, board, stepsForward):
         pawnsToMove = []
-        if stepsForward == 6: # look first to open bridges
+        if stepsForward == 6 or stepsForward == 7: # look first to open bridges
             pawnValues = {}
             for pawn in self.pawns:
                 if self.pawns[pawn] not in pawnValues:
