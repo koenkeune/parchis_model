@@ -33,7 +33,7 @@ class Game:
                 turn = 0
             self.sixesThrown = 0
             
-    def playOneTurn(self, turn, diceNumbers = []):
+    def playOneTurn(self, turn, diceNumbers = []): # diceNumbers to be able to test the function
         self.canThrowAgain = True
         i = 0
         while self.canThrowAgain:
@@ -67,8 +67,6 @@ class Game:
         capture = False
         finish = False
         pawnsToMove = self.players[i].findPawnsToMove(self.board, stepsForward)
-        if self.printResults:
-            print('pawns to move:', pawnsToMove)
         if pawnsToMove:
             if self.players[i].strategy == 'player': # should only exist in player played game, should check for object GamePlayer
                 pawn = self.playerPickMove(i, stepsForward, pawnsToMove) # draw virtual moves and let the player pick a move
@@ -76,13 +74,13 @@ class Game:
                 if len(pawnsToMove) == 1: # or at the same pos
                     pawn = pawnsToMove[0]
                 else:
-                    pawn = self.players[i].performStrategy(self.players, self.board, pawnsToMove, stepsForward) # move in head
-            if self.printResults:
-                print('will move:', pawn)        
+                    pawn = self.players[i].performStrategy(self.players, self.board, pawnsToMove, stepsForward) # move in head   
             positions = self.players[i].findNewPos(pawn, stepsForward) # move in head
             if self.sixesThrown == 3 and positions[1] < (self.board.boardSize - 4): # remove only if it didn't land in the end zone
                 self.players[i].makeMove(pawn, -1, self.board.boardSize)
                 self.board.makeMove(self.players, i, pawn, positions[0], -1) # can only remove if it is on the board
+                if self.printResults:
+                    print('three sixes and has to return to home')
             else:
                 self.players[i].makeMove(pawn, positions[1], self.board.boardSize) # move in head
                 capture, finish = self.board.makeMove(self.players, i, pawn, positions[0], positions[1]) # move in real life
@@ -121,7 +119,7 @@ class Game:
 
 
 class GamePlayer(Game): # plays one game
-    def __init__(self, strategies):
+    def __init__(self, strategies, debug):
         super().__init__(strategies)
         self.printResults = True
         self.W = 800
@@ -131,6 +129,7 @@ class GamePlayer(Game): # plays one game
         drawBoard(self.screen, self.W, self.H)
         self.screen_copy = self.screen.copy()
         drawPawnsAtHome(self.screen, self.players)
+        self.debug = debug
         
     def playGame(self): # plays one game
         t = self.throwDiceForStart()
@@ -153,13 +152,19 @@ class GamePlayer(Game): # plays one game
             if nextStep:
                 if capture:
                     stepsForward = 20
+                    print(self.playerColors[t], 'has captured a pawn and can move an extra 20')
                 elif finish:
                     stepsForward = 10
+                    print(self.playerColors[t], 'has a pawn in finish and can move an extra 10')
                 else:    
-                    stepsForward = self.determineStepsForward(t, randrange(1,7))
+                    diceNumber = randrange(1,7)
+                    stepsForward = self.determineStepsForward(t, diceNumber)
+                    print(self.playerColors[t], 'rolled:', diceNumber)
+                    if stepsForward == 7:
+                        print('and can move an extra step')
                 
-                print(self.board.filledBoard)
-                print(self.playerColors[t], 'can move:', stepsForward)
+                if self.debug:
+                    print(self.board.filledBoard)
                 capture, finish = self.makeMove(t, stepsForward)
                 
                 if self.someoneWon:
@@ -196,9 +201,10 @@ class GamePlayer(Game): # plays one game
             else:
                 finishedVirtual.append(i+1)
         
-        print(virtualBoard.filledBoard )
-        print(self.board.filledFinishLine)
-        print(virtualBoard.filledFinishLine)
+        if self.debug:
+            print(virtualBoard.filledBoard )
+            print(self.board.filledFinishLine)
+            print(virtualBoard.filledFinishLine)
         self.screen.blit(self.screen_copy, (0,0))
         drawPawnsOnBoard(self.screen, virtualBoard.filledBoard)
         drawPawnsAtHome(self.screen, self.players)
