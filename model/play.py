@@ -29,16 +29,16 @@ if play:
         except ValueError:
             print("{input} is not a number, please enter a number only".format(input=input_value))     
     
-    strategies = ['player', 'safest', 'furthest', 'furthest']
+    strategies = ['player', 'agressive', 'safest', 'agressive']
     if numPlayers == 2:
-        strategies = ['player', 'safest', 'player', 'furthest']
+        strategies = ['player', 'safest', 'player', 'agressive']
     elif numPlayers == 3:
-        strategies = ['player', 'player', 'player', 'furthest']
+        strategies = ['player', 'player', 'player', 'agressive']
     elif numPlayers == 4:
         strategies = ['player', 'player', 'player', 'player']
     GamePlayer(strategies, debug).playGame()
 else:
-    strategies = ['safest', 'agressive', 'safest', 'agressive']
+    strategies = ['safest', 'furthest', 'agressive', 'furthest']
     winners = {}
     for i in range(4):
         winners[strategies[i]] = 0
@@ -53,12 +53,12 @@ else:
         print(gamePlayed.players[gamePlayed.winner].name, 'with strategy', gamePlayed.players[gamePlayed.winner].strategy, 'won in', gamePlayed.totalTurns, 'turns')
     else:
         allStrategies = set(strategies)
-        # strategiesRepeats = {} # correct for repeated strategies in game
-        # for strategy in strategies:
-            # if strategy in strategiesRepeats:
-                # strategiesRepeats[strategy] += 1
-            # else:
-                # strategiesRepeats[strategy] = 1
+        strategiesRepeats = {}
+        for strategy in strategies:
+            if strategy in strategiesRepeats:
+                strategiesRepeats[strategy] += 1
+            else:
+                strategiesRepeats[strategy] = 1
             
         for strategy in allStrategies:
-            print('stategy', strategy, 'won:', (winners[strategy] / runs) * 100, '% of the games')
+            print('stategy', strategy, 'won:', (winners[strategy] / runs / strategiesRepeats[strategy]) * 100, '% of the games')
