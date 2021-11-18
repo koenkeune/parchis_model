@@ -73,7 +73,10 @@ class ParchisTester(unittest.TestCase):
     def test_rule7(self):
         tester = RulesTester(self.game)
         tester.check_rule7()
-        
+    
+    def test_safeStrategy(self):
+        tester = RulesTester(self.game)
+        assert tester.check_safe_strat()
         
 if __name__ == "__main__":
     unittest.main()

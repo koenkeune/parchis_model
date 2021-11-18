@@ -231,3 +231,16 @@ class RulesTester():
         assert self.game.board.filledFinishLine == self.scenes.Test7.FINISHLINEAFTER
         assert self.game.someoneWon == True
         assert self.game.winner == pl
+        
+    def check_safe_strat(self):
+        pl = 2
+        self.game.board.filledBoard = self.scenes.TestSafe.BOARD
+        self.game.players[pl].pawns = self.scenes.TestSafe.PLAYER2PAWNS
+        self.game.players[pl].pawnsHome = self.scenes.TestSafe.PLAYER2PAWNSHOME
+        self.game.players[pl].pawnsFinished = self.scenes.TestSafe.PLAYER2PAWNSFINISHED
+        self.game.players[pl].strategy = 'safest'
+        diceNumber = 3
+        self.game.playOneTurn(pl, [diceNumber])
+        
+        return(self.game.board.filledBoard == self.scenes.TestSafe.BOARDAFTER and
+            self.game.board.filledFinishLine == self.scenes.TestSafe.FINISHLINEAFTER)
