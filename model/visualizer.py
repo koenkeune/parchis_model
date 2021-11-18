@@ -168,7 +168,7 @@ def getDrawingPosHome(playerNum, pawnsInBase):
     return(pos)
     
 def getDrawingPosTwoPawns(posOfPawn, pos, twoPawns, finishLine, playerNum):
-    if ((not(finishLine) and posOfPawn in list(range(8)) + list(range(25,42)) + list(range(59, 67))) or 
+    if ((not(finishLine) and posOfPawn in list(range(8)) + list(range(25,42)) + list(range(59, 68))) or 
         (finishLine and playerNum in [0,2])):  
         if twoPawns == 1:
             posX = pos[0] - W/42
