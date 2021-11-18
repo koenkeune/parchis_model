@@ -2,16 +2,41 @@ import sys
 from game import *
 
 play = False
-if len(sys.argv) - 1 > 1:
-    sys.exit("first argument is optional and is the number of runs")
-elif len(sys.argv) - 1 == 1:
-    runs = int(sys.argv[1])
-else:
-    play = True
+debug = False
+try:
+    if len(sys.argv) - 1 > 1:
+        sys.exit("First argument is optional and is the number of runs")
+    elif len(sys.argv) - 1 == 1:
+        if sys.argv[1] == 'debug':
+            debug = True
+            play = True
+        else:    
+            runs = int(sys.argv[1])
+    else:
+        play = True
+except ValueError:
+    sys.exit("Run the model with python model/play.py [runs]\nTest the model with python testing/test.py")
 
 if play:
+    # how many players?
+    numPlayers = 0
+    while numPlayers < 1 or numPlayers > 4:
+        input_value = input("With how many players do you want to play? ")
+        try:
+            if int(input_value) < 1 or int(input_value) > 4:
+                print("please select a number between 1 and 4".format(input=input_value))  
+            numPlayers = int(input_value)
+        except ValueError:
+            print("{input} is not a number, please enter a number only".format(input=input_value))     
+    
     strategies = ['player', 'safest', 'furthest', 'furthest']
-    GamePlayer(strategies).playGame()
+    if numPlayers == 2:
+        strategies = ['player', 'safest', 'player', 'furthest']
+    elif numPlayers == 3:
+        strategies = ['player', 'safest', 'player', 'furthest']
+    else:
+        strategies = ['player', 'safest', 'player', 'furthest']
+    GamePlayer(strategies, debug).playGame()
 else:
     strategies = ['safest', 'safest', 'furthest', 'safest']
     winners = {}
