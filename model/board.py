@@ -78,6 +78,8 @@ class Player:
             pawnToMove = self.findFurthestPawn(pawnsToMove)
         elif self.strategy == 'safest':
             pawnToMove = self.findSafestMove(players, board, pawnsToMove, stepsForward)
+        elif self.strategy == 'agressive':
+            pawnToMove = self.findAgressiveMove(players, board, pawnsToMove, stepsForward)
             
         return(pawnToMove)
     
@@ -87,6 +89,33 @@ class Player:
         furthestPawn = list(pawns.keys())[list(pawns.values()).index(maxValue)]
         
         return(furthestPawn)
+        
+    def findAgressiveMove(self, players, board, pawnsToMove, stepsForward):
+        captureMoves = self.findCaptureMoves(players, board, pawnsToMove, stepsForward)
+        if not captureMoves:
+            return(self.findFurthestPawn(pawnsToMove))
+        elif len(captureMoves) == 1:
+            return(captureMoves[0])
+        else:
+            return(self.findFurthestPawn(captureMoves))
+        
+    def findCaptureMoves(self, players, board, pawnsToMove, stepsForward):
+        captureMoves = []
+        for pawn in pawnsToMove:
+            relPos = self.pawns[pawn] + stepsForward
+            if relPos < board.boardSize - 5:
+                pos = (relPos + self.startingPoint) % board.boardSize
+                if pos not in board.safeSpots and pos not in board.startingPoints and len(board.filledBoard[pos]) == 1:
+                    j = int(board.filledBoard[pos][0][6])
+                    if self.number != j:
+                        captureMoves.append(pawn)
+                elif pos == (self.startingPoint % board.boardSize) and len(board.filledBoard[pos]) == 2:
+                    j = int(board.filledBoard[pos][0][6])
+                    k = int(board.filledBoard[pos][1][6])
+                    if self.number != k or self.number != j:
+                        captureMoves.append(pawn)
+                
+        return(captureMoves)
         
     def findSafestMove(self, players, board, pawnsToMove, stepsForward):
         safeScores = self.calcSafetyScores(players, board, pawnsToMove, stepsForward) # dont calculate when pawn is not on board 
@@ -189,23 +218,23 @@ class Board: # now only the small board variant
             self.safeSpots.append((i * 17 - 1) % self.boardSize) # endPoints
             self.safeSpots.append(i * 17 + 12 - 1)
             
-    def makeMove(self, players, i, pawn, oldPosRel, newPosRel):
+    def makeMove(self, players, i, pawn, oldRelPos, newRelPos):
         finish = False
         capture = False
-        newPos = (newPosRel + players[i].startingPoint) % self.boardSize
-        oldPos = (oldPosRel + players[i].startingPoint) % self.boardSize
-        newPosFin = newPosRel - (self.boardSize - 4) # finish line pos
+        newPos = (newRelPos + players[i].startingPoint) % self.boardSize
+        oldPos = (oldRelPos + players[i].startingPoint) % self.boardSize
+        newPosFin = newRelPos - (self.boardSize - 4) # finish line pos
         if newPosFin < 0:
-            capture = self.capturePawn(players, i, newPosRel)
-            if newPosRel == 0:
+            capture = self.capturePawn(players, i, newRelPos)
+            if newRelPos == 0:
                 self.filledBoard[newPos].append(pawn) # add board
-            elif newPosRel == -1 and newPosRel != oldPosRel: # should be at exactly + 3
+            elif newRelPos == -1 and newRelPos != oldRelPos: # should be at exactly + 3
                 self.filledBoard[oldPos].remove(pawn) # remove board
-            elif newPosRel != oldPosRel and oldPosRel != -1: 
+            elif newRelPos != oldRelPos and oldRelPos != -1: 
                 self.filledBoard[newPos].append(pawn) # add board
                 self.filledBoard[oldPos].remove(pawn) # remove board
         else:
-            oldPosFin = oldPosRel - (self.boardSize - 4)
+            oldPosFin = oldRelPos - (self.boardSize - 4)
             if newPosFin > 6 and oldPosFin < 0:
                 self.filledBoard[oldPos].remove(pawn) # remove board
                 finish = True
@@ -221,17 +250,17 @@ class Board: # now only the small board variant
                 
         return(capture, finish)
             
-    def capturePawn(self, players, i, posRel): # capture when there is another player at the same position        
+    def capturePawn(self, players, i, relPos): # capture when there is another player at the same position        
         capture = False
-        if posRel < self.boardSize - 5:
-            pos = (posRel + players[i].startingPoint) % self.boardSize
+        if relPos < self.boardSize - 5:
+            pos = (relPos + players[i].startingPoint) % self.boardSize
             if pos not in self.safeSpots and pos not in self.startingPoints and len(self.filledBoard[pos]) == 1:
                 j = int(self.filledBoard[pos][0][6]) # other player on same pos
                 if i != j:
                     capture = True
                     players[j].makeMove(self.filledBoard[pos][0], -1, self.boardSize)
                     self.filledBoard[pos].remove(self.filledBoard[pos][0])
-            elif pos in self.startingPoints and len(self.filledBoard[pos]) == 2:
+            elif pos == (players[i].startingPoint % self.boardSize) and len(self.filledBoard[pos]) == 2: #(players[i].startingPoint % self.boardSize), pos in self.startingPoints
                 j = int(self.filledBoard[pos][0][6])
                 k = int(self.filledBoard[pos][1][6])
                 if i != k: # capture last pawn first

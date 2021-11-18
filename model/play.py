@@ -33,12 +33,12 @@ if play:
     if numPlayers == 2:
         strategies = ['player', 'safest', 'player', 'furthest']
     elif numPlayers == 3:
-        strategies = ['player', 'safest', 'player', 'furthest']
-    else:
-        strategies = ['player', 'safest', 'player', 'furthest']
+        strategies = ['player', 'player', 'player', 'furthest']
+    elif numPlayers == 4:
+        strategies = ['player', 'player', 'player', 'player']
     GamePlayer(strategies, debug).playGame()
 else:
-    strategies = ['safest', 'safest', 'furthest', 'safest']
+    strategies = ['safest', 'agressive', 'safest', 'agressive']
     winners = {}
     for i in range(4):
         winners[strategies[i]] = 0
