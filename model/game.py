@@ -43,7 +43,6 @@ class Game:
                 diceNumber = randrange(1,7)
             stepsForward = self.determineStepsForward(turn, diceNumber)
             self.playOneThrow(turn, stepsForward)
-            
             self.someoneWon = (len(self.players[turn].pawns) == 0)
             if self.someoneWon:
                 self.winner = turn
@@ -74,7 +73,7 @@ class Game:
                 if len(pawnsToMove) == 1: # or at the same pos
                     pawn = pawnsToMove[0]
                 else:
-                    pawn = self.players[i].performStrategy(self.players, self.board, pawnsToMove, stepsForward) # move in head   
+                    pawn = self.players[i].performStrategy(self.players, self.board, pawnsToMove, stepsForward) # move in head 
             positions = self.players[i].findNewPos(pawn, stepsForward) # move in head
             if self.sixesThrown == 3 and positions[1] < (self.board.boardSize - 4): # remove only if it didn't land in the end zone
                 self.players[i].makeMove(pawn, -1, self.board.boardSize)
@@ -103,7 +102,6 @@ class Game:
         
     def throwDiceForStart(self):
         thrownNumbers = [[i,0] for i in range(self.numPlayers)]
-
         while len(thrownNumbers) > 1:
             for i, thrownNumber in enumerate(thrownNumbers):
                 thrownNumber[1] = randrange(1,7)

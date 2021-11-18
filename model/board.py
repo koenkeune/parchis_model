@@ -24,6 +24,15 @@ class Player:
         if newPos == (boardSize + 3):
             del self.pawns[pawn]
             self.pawnsFinished += 1
+            
+    def findNewPos(self, pawn, stepsForward):
+        oldPos = self.pawns[pawn]
+        if oldPos != -1:
+            newPos = oldPos + stepsForward
+        else:
+            newPos = 0
+            
+        return(oldPos, newPos)        
     
     def findPawnsToMove(self, board, stepsForward):
         pawnsToMove = []
@@ -118,7 +127,7 @@ class Player:
         return(captureMoves)
         
     def findSafestMove(self, players, board, pawnsToMove, stepsForward):
-        safeScores = self.calcSafetyScores(players, board, pawnsToMove, stepsForward) # dont calculate when pawn is not on board 
+        safeScores = self.calcSafetyScores(players, board, pawnsToMove, stepsForward) # dont calculate when pawn is not on board
         safestMove = max(safeScores, key=safeScores.get)
         safestMoves = []
         for safeScore in safeScores:
@@ -128,15 +137,6 @@ class Player:
             return(self.findFurthestPawn(safestMoves))
         else:
             return(safestMoves[0])
-        
-    def findNewPos(self, pawn, stepsForward):
-        oldPos = self.pawns[pawn]
-        if oldPos != -1:
-            newPos = oldPos + stepsForward
-        else:
-            newPos = 0
-            
-        return(oldPos, newPos)
         
     def calcSafetyScores(self, players, board, pawnsToMove, stepsForward):
         otherPlNums = set(range(4)) - {self.number} # number of players is 4
@@ -148,24 +148,30 @@ class Player:
         safetyScore = {}
         for pawn in pawnsToMove:
             relPos = self.pawns[pawn]
-            pos = (relPos + self.startingPoint) % board.boardSize
-            posNew = (pos + stepsForward) % board.boardSize
-            safetyRank = self.calcSafetyRank(players, board, stepsForward, pos, hasPawnsAtBase, hasBridges, False)
-            safetyRankNew = self.calcSafetyRank(players, board, stepsForward, posNew, hasPawnsAtBase, hasBridges, True)
+            safetyRank = self.calcSafetyRank(players, board, stepsForward, relPos, hasPawnsAtBase, hasBridges, False)
+            safetyRankNew = self.calcSafetyRank(players, board, stepsForward, relPos, hasPawnsAtBase, hasBridges, True)
             safetyScore[pawn] = safetyRankNew - safetyRank
             
         return(safetyScore)
 
-    def calcSafetyRank(self, players, board, stepsForward, pos, hasPawnsAtBase, hasBridges, futureMove):
+    def calcSafetyRank(self, players, board, stepsForward, relPos, hasPawnsAtBase, hasBridges, futureMove):
+        pos = (relPos + self.startingPoint) % board.boardSize
+        if futureMove:
+            pos = (pos + stepsForward) % board.boardSize
+            relPos = relPos + stepsForward
+    
         safetyRank = 0
+        needsSafeRank = False
         if pos in board.safeSpots or pos == self.startingPoint or pos > board.boardSize - 5:
             safetyRank = 1
-        elif len(board.filledBoard[pos]) == 2 and pos not in board.startingPoints:
+        elif len(board.filledBoard[pos]) == 2 and pos not in board.startingPoints: # should be in startingPoint of someone else
+            safetyRank = 1
+        elif relPos >= board.boardSize - 4:
             safetyRank = 1
         elif futureMove and len(board.filledBoard[pos]) == 1 and pos not in board.startingPoints:
-            if self.number == int(board.filledBoard[pos][0][6]): # future bridge, maybe it can be added with the if
+            if self.number == int(board.filledBoard[pos][0][6]): # future bridge
                 safetyRank = 1
-        else:
+        if safetyRank == 0: # if safetyRank is not in one of the if's before
             pawnsPerPlayerBehind = self.countPawnsBehind(players, board, stepsForward, pos, hasPawnsAtBase, hasBridges)
             for value in pawnsPerPlayerBehind.values():
                 safetyRank = value / 6 + (1 - value / 6) * safetyRank
@@ -260,7 +266,7 @@ class Board: # now only the small board variant
                     capture = True
                     players[j].makeMove(self.filledBoard[pos][0], -1, self.boardSize)
                     self.filledBoard[pos].remove(self.filledBoard[pos][0])
-            elif pos == (players[i].startingPoint % self.boardSize) and len(self.filledBoard[pos]) == 2: #(players[i].startingPoint % self.boardSize), pos in self.startingPoints
+            elif pos == (players[i].startingPoint % self.boardSize) and len(self.filledBoard[pos]) == 2:
                 j = int(self.filledBoard[pos][0][6])
                 k = int(self.filledBoard[pos][1][6])
                 if i != k: # capture last pawn first
